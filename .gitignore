@@ -1,0 +1,5 @@
+# Obsidian local config
+.tracker/.obsidian/
+
+# Environment files
+.env
