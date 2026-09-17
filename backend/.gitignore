@@ -1,0 +1,34 @@
+target/
+
+# Maven
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.factorypath
+
+# Build and runtime files
+*.log
+logs/
+hs_err_pid*
+replay_pid*
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Spring Boot devtools
+spring-boot-devtools.properties

@@ -1,0 +1,32 @@
+services:
+  database:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=${SPRING_DATASOURCE_DB:-securepay_db}
+      - POSTGRES_USER=${SPRING_DATASOURCE_USERNAME:-securepay}
+      - POSTGRES_PASSWORD=${SPRING_DATASOURCE_PASSWORD:-securepay}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${SPRING_DATASOURCE_USERNAME:-securepay} -d ${SPRING_DATASOURCE_DB:-securepay_db}",
+        ]
+      interval: 10s
+      timeout: 15s
+      retries: 5
+      start_period: 30s
+
+  securepay_api:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - ${PORT:-8080}:${PORT:-8080}
+    depends_on:
+      database:
+        condition: service_healthy
+volumes:
+  pg_data:
