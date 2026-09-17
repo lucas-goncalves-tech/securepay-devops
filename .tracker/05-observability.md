@@ -10,10 +10,31 @@ rfc: RFC-005
 
 ## Acceptance Criteria
 
-- [ ] Orquestração de Observabilidade (`docker-compose.observability.yml`)
-- [ ] Configuração de Coleta do Prometheus (`prometheus.yml`)
-- [ ] Dashboard Corporativo no Grafana (`ledger-dashboard.json`)
-- [ ] Script de Teste de Carga e Resiliência (`load-test.js`)
+### AC-1: Orquestração de Observabilidade (`docker-compose.observability.yml`)
+
+- [ ] Serviço **Prometheus** (`prom/prometheus:latest`) porta `9090:9090`, monta `prometheus.yml`
+- [ ] Serviço **Grafana** (`grafana/grafana:latest`) porta `3000:3000`
+- [ ] Rede compartilhada entre Prometheus e `ledger-service`
+- [ ] Aceito como fallback: pasta do estágio ou `infra/ledger-service/observability/`
+
+### AC-2: Configuração do Prometheus (`prometheus.yml`)
+
+- [ ] Job `ledger-service` com intervalo de scraping de `5s`
+- [ ] Target apontando para `/actuator/prometheus` da aplicação
+
+### AC-3: Dashboard no Grafana (`dashboards/ledger-dashboard.json`)
+
+- [ ] **Painel 1 — Vazão HTTP:** RPS por status HTTP (`http_server_requests_seconds_count`)
+- [ ] **Painel 2 — Latência de Cauda:** Percentis `p95` e `p99` de `/api/v1/payments/transfer`
+- [ ] **Painel 3 — Saturação do Pool:** HikariCP conexões ativas (`hikaricp_connections_active`), ociosas (`hikaricp_connections_idle`), pendentes (`hikaricp_connections_pending`)
+- [ ] **Painel 4 — Memória JVM:** Heap usado (`jvm_memory_used_bytes{area="heap"}`)
+
+### AC-4: Script de Teste de Carga (`scripts/load-test.js`)
+
+- [ ] Script **k6** com 50-100 VUs concorrentes contra `/api/v1/payments/transfer`
+- [ ] Header `X-Idempotency-Key` em cada requisição de pagamento
+- [ ] Threshold: `http_req_failed < 0.01` (< 1% falha)
+- [ ] Threshold: `http_req_duration{p(95)<500}` (p95 < 500ms)
 
 ## Scope
 

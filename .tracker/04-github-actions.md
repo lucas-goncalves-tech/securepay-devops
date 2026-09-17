@@ -10,12 +10,37 @@ rfc: RFC-004
 
 ## Acceptance Criteria
 
-- [ ] Workflow e gatilhos (`ledger-service-ci.yml`)
-- [ ] Job 1: Verificação do Backend (`backend-verification`)
-- [ ] Job 2: Build de Contêiner e Varredura de Segurança (`container-security`)
-- [ ] Job 3: Validação de Infraestrutura & Simulação IaC (`terraform-gate`)
-- [ ] Job 4: Automação FinOps de Ambientes de Staging
-- [ ] Validação Sintática e Coerência Local
+### AC-1: Workflow e Gatilhos (`.github/workflows/ledger-service-ci.yml`)
+
+- [ ] Gatilhos `push` e `pull_request` para branches `main` e `master`
+- [ ] Filtro de caminhos: `app/ledger-service/**` dispara backend; `infra/ledger-service/**` ou `infra/platform/**` dispara IaC gate
+
+### AC-2: Job 1 — Verificação do Backend (`backend-verification`)
+
+- [ ] Ambiente Java 21 LTS com cache Maven (`cache: 'maven'`)
+- [ ] Executa `./mvnw clean test` ou `./mvnw verify` no diretório `app/ledger-service`
+
+### AC-3: Job 2 — Build de Contêiner e Varredura de Segurança (`container-security`)
+
+- [ ] Build da imagem Docker usando `app/ledger-service/Dockerfile`
+- [ ] Varredura com **Trivy** (`aquasecurity/trivy-action` ou CLI)
+- [ ] Falha o job se houver vulnerabilidades `CRITICAL` ou `HIGH`
+
+### AC-4: Job 3 — Validação de Infraestrutura (`terraform-gate`)
+
+- [ ] Service container LocalStack (`localstack/localstack:4.4.0`) porta `4566:4566`, vars: `SERVICES=s3,ec2`, `AWS_DEFAULT_REGION=sa-east-1`
+- [ ] `working-directory: infra/ledger-service/terraform`
+- [ ] Executa: `terraform fmt -check`, `terraform init`, `terraform validate`, `terraform plan`
+
+### AC-5: Job 4 — Automação FinOps de Staging
+
+- [ ] Gatilho agendado `schedule` (cron noturno, ex: `0 22 * * 1-5`) para desligar staging
+- [ ] Gatilho manual `workflow_dispatch` com input `action` (`start` ou `stop`)
+- [ ] Pode morar no CI workflow ou em workflow dedicado (`staging-lifecycle.yml`)
+
+### AC-6: Validação Sintática
+
+- [ ] YAML íntegro, indentação correta, executáveis invocados existem
 
 ## Scope
 

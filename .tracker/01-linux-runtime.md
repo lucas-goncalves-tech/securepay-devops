@@ -10,8 +10,30 @@ rfc: RFC-001
 
 ## Acceptance Criteria
 
-- [ ] Variáveis de Ambiente Desacopladas (`.env` e `.env.example`)
-- [ ] Script de Healthcheck Automatizado (`healthcheck.sh`)
+### AC-1: Variáveis de Ambiente Desacopladas (`.env` e `.env.example`)
+
+Criar `stages-labs/spring-cloud-platform/01-linux-runtime/.env` com as variáveis esperadas pela aplicação:
+
+| Variável | Exemplo |
+|----------|---------|
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/securepay_db` |
+| `SPRING_DATASOURCE_USERNAME` | `postgres` |
+| `SPRING_DATASOURCE_PASSWORD` | `postgres` |
+| `PORT` | `8080` |
+| `JWT_SECRET` | chave de 256 bits em hexadecimal ou base64 |
+
+- [ ] `.env` criado com todas as 5 variáveis acima
+- [ ] `.env` fora do versionamento (em `.gitignore`)
+- [ ] `.env.example` criado como modelo de referência (mesmas chaves, valores placeholder)
+
+### AC-2: Script de Healthcheck Automatizado (`healthcheck.sh`)
+
+Criar `stages-labs/spring-cloud-platform/01-linux-runtime/healthcheck.sh`:
+
+- [ ] Permissão de execução (`chmod +x`)
+- [ ] Teste L4: escuta de porta via `nc -z`, `/dev/tcp` ou `curl`
+- [ ] Teste L7: consulta `/actuator/health` e verifica `status = "UP"`
+- [ ] Exit code `0` quando saudável, `1` quando inacessível ou status diferente de UP
 
 ## Scope
 
