@@ -20,6 +20,13 @@ securepay-devops/
 │   ├── 03-terraform-vpc/
 │   ├── 04-github-actions/
 │   └── 05-observability/
+├── .tracker/                   # Obsidian-compatible issue tracker
+│   ├── BOARD.md
+│   ├── 01-linux-runtime.md
+│   ├── 02-docker-compose.md
+│   ├── 03-terraform-vpc.md
+│   ├── 04-github-actions.md
+│   └── 05-observability.md
 └── .agents/skills/             # Matt Pocock engineering skills
 ```
 
@@ -27,11 +34,11 @@ securepay-devops/
 
 | Stage | Focus | Status |
 |-------|-------|--------|
-| 01 | Linux runtime, env vars, healthcheck, POSIX signals | Done |
+| 01 | Linux runtime, env vars, healthcheck, POSIX signals | To Do |
 | 02 | Multi-stage Dockerfile, Docker Compose, non-root user | Done |
-| 03 | Terraform HCL, VPC multi-tier, LocalStack, S3 | Done |
-| 04 | GitHub Actions CI/CD, Trivy scanning, IaC gates | Partial |
-| 05 | Prometheus, Grafana dashboards, k6 load testing | Pending |
+| 03 | Terraform HCL, VPC multi-tier, LocalStack, S3 | To Do |
+| 04 | GitHub Actions CI/CD, Trivy scanning, IaC gates | To Do |
+| 05 | Prometheus, Grafana dashboards, k6 load testing | To Do |
 
 ## Startup
 
