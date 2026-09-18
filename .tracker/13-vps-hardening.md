@@ -14,28 +14,53 @@ Deixar servidor barato apto a produção com acesso mínimo, firewall e proteç�
 
 ## O que fazer
 
-- [ ] Criar usuário operacional com sudo sem senha direta para root
-- [ ] Desativar login por senha e exigir apenas chave SSH
-- [ ] Ativar firewall permitindo só SSH, HTTP e HTTPS
-- [ ] Ativar proteção contra brute-force com ban temporário
-- [ ] Configurar swap para evitar OOM sob pico de memória
-- [ ] Auditar portas expostas e fechar tudo que não é público
+### Etapa 1 — Acesso
+
+**INÍCIO:** root com senha, superfície aberta.
+
+- [ ] Criar usuário operacional com sudo, sem senha direta para root
+- [ ] Desativar login por senha, exigir só chave SSH
+
+**FIM:** senha recusada; só chave passa.
+
+---
+
+### Etapa 2 — Blindagem
+
+**INÍCIO:** portas expostas, sem ban.
+
+- [ ] Ativar firewall só para SSH, HTTP e HTTPS
+- [ ] Ativar ban temporário contra brute-force
+- [ ] Configurar swap anti-OOM
+- [ ] Auditar portas e fechar o não-público
+
+**FIM:** scan externo só vê o essencial; brute-force gera ban.
 
 ## O que aprender
 
-- [ ] Hardening SSH e UFW
+### Aprender A — SSH e firewall
+
+- [ ] Hardening
   - https://www.ssh.com/academy/ssh/hardening
   - https://help.ubuntu.com/community/UFW
-- [ ] Fail2ban e segurança de VPS
+
+**FIM:** sei justificar cada porta aberta.
+
+---
+
+### Aprender B — Proteção contínua
+
+- [ ] Fail2ban e benchmarks
   - https://www.fail2ban.org/wiki/index.php/Main_Page
   - https://www.cisecurity.org/cis-benchmarks
 
+**FIM:** sei ler ban ativo no log.
+
 ## Critério de pronto
 
-- Login por senha recusado, só chave passa
-- Scan externo só vê portas públicas essenciais
-- Ataque de força bruta gera ban automático
-- Sei explicar cada porta aberta e por quê
+1. [ ] Só chave autentica
+2. [ ] Firewall mínimo
+3. [ ] Ban automático funcional
 
 ---
 

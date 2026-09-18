@@ -14,34 +14,70 @@ Provar em produção local que a API sustenta concorrência real sem starvation 
 
 ## O que fazer
 
-- [ ] Orquestrar stack: coletor em `9090` e dashboard em `3000` na mesma rede da API
-- [ ] Expor métricas via `/actuator/prometheus` do Actuator
-- [ ] Configurar job `ledger-service` com scraping `5s`
-- [ ] Criar dashboard com 4 painéis: RPS por status (`http_server_requests_seconds_count`), p95/p99 de `/api/v1/payments/transfer`, HikariCP ativa/ociosa/pendente (`hikaricp_connections_active`, `_idle`, `_pending`), heap JVM (`jvm_memory_used_bytes{area="heap"}`)
-- [ ] Criar carga k6 com 50–100 VUs contra `/api/v1/payments/transfer` com header `X-Idempotency-Key`
-- [ ] Validar thresholds: `http_req_failed < 0.01` e `http_req_duration{p(95)<500}`; investigar starvation com `connection-timeout: 20s` em mente
+### Etapa 1 — Coleta
+
+**INÍCIO:** app no escuro, sem métricas.
+
+- [ ] Orquestrar coletor em `9090` e dashboard em `3000` na mesma rede da API
+- [ ] Expor `/actuator/prometheus`; job `ledger-service` com scraping `5s`
+
+**FIM:** métricas fluindo em tempo real.
+
+---
+
+### Etapa 2 — Dashboard (4 painéis)
+
+**INÍCIO:** dados existem, mas ninguém vê gargalo.
+
+- [ ] Painel 1 RPS por status (`http_server_requests_seconds_count`)
+- [ ] Painel 2 p95/p99 de `/api/v1/payments/transfer`
+- [ ] Painel 3 HikariCP (`hikaricp_connections_active`, `_idle`, `_pending`)
+- [ ] Painel 4 heap JVM (`jvm_memory_used_bytes{area="heap"}`)
+
+**FIM:** 4 painéis no ar com as métricas exatas.
+
+---
+
+### Etapa 3 — Carga com SLO
+
+**INÍCIO:** dashboard bonito, resiliência não provada.
+
+- [ ] Carga k6 50–100 VUs contra `/api/v1/payments/transfer` com `X-Idempotency-Key`
+- [ ] Validar `http_req_failed < 0.01` e `http_req_duration{p(95)<500}`; observar `connection-timeout: 20s`
+
+**FIM:** carga passa sem starvation; média de 120ms não esconde cauda > 5s.
 
 ## O que aprender
 
-- [ ] Actuator + Micrometer e métricas de produção
+### Aprender A — Métricas
+
+- [ ] Actuator + Micrometer
   - https://docs.spring.io/spring-boot/reference/actuator/metrics.html
   - https://micrometer.io/docs
-- [ ] Configuração de scraping do Prometheus
+- [ ] Scraping Prometheus
   - https://prometheus.io/docs/prometheus/latest/configuration/configuration/
-- [ ] Dashboards Grafana (PromQL para RPS, histogramas, p95/p99)
+
+**FIM:** sei explicar o que cada métrica mede.
+
+---
+
+### Aprender B — Visualização e carga
+
+- [ ] Grafana e PromQL
   - https://grafana.com/docs/grafana/latest/dashboards/
   - https://prometheus.io/docs/prometheus/latest/querying/basics/
-- [ ] Teste de carga e thresholds
+- [ ] k6 e thresholds
   - https://grafana.com/docs/k6/
-- [ ] Pool HikariCP e gargalos de conexão
+- [ ] HikariCP
   - https://github.com/brettwooldridge/HikariCP
+
+**FIM:** sei apontar gargalo (GC, threads, contenção, pool) no gráfico.
 
 ## Critério de pronto
 
-- Dashboard mostra RPS, p95/p99, pool e heap em tempo real com as métricas exatas acima
-- Carga 50–100 VUs passa com `http_req_failed < 0.01` e p95 < 500ms, sem starvation do banco
-- Média ilusória (ex: 120ms) não esconde cauda p95/p99 (risco > 5s); sei apontar gargalo (GC, threads HTTP, contenção, pool)
-- Sei apontar no gráfico onde mora o gargalo (I/O, pool ou heap)
+1. [ ] 4 painéis com métricas exatas
+2. [ ] k6 dentro dos thresholds, sem starvation
+3. [ ] Diagnóstico de gargalo demonstrável
 
 ## Fora de escopo
 

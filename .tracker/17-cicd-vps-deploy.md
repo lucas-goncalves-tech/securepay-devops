@@ -14,25 +14,51 @@ Fechar o ciclo DevSecOps: cada merge verde vira deploy auditável em produção 
 
 ## O que fazer
 
-- [ ] Reutilizar gates (segredos, SAST, SCA de imagem) como pré-requisito de deploy
-- [ ] Deploy via SSH com chave efêmera de CI, sem senha em log
-- [ ] Estratégia com healthcheck pós-deploy e rollback automático se falhar
-- [ ] Registrar o que foi deployado (versão, autor, timestamp) de forma auditável
-- [ ] Separar deploy de produção de staging por aprovação ou filtro de branch
+### Etapa 1 — Gates antes do deploy
+
+**INÍCIO:** deploy sem barreira.
+
+- [ ] Reutilizar gates (segredos, SAST, SCA) como pré-requisito
+- [ ] Separar produção de staging por aprovação ou filtro de branch
+
+**FIM:** só verde deploya.
+
+---
+
+### Etapa 2 — Deploy auditável
+
+**INÍCIO:** SSH manual, sem rastro.
+
+- [ ] Deploy via SSH com chave efêmera, sem senha em log
+- [ ] Healthcheck pós-deploy com rollback automático se falhar
+- [ ] Registrar versão, autor e timestamp de forma auditável
+
+**FIM:** merge vira deploy sozinho; falha reverte; versão rastreável em 30s.
 
 ## O que aprender
 
-- [ ] Deploy contínuo seguro via SSH
+### Aprender A — Deploy seguro
+
+- [ ] SSH no CI e environments
   - https://docs.github.com/en/actions/how-tos/deploy/configure-ssh-access-to-your-secrets
   - https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflows-do/use-environments-for-deployment
-- [ ] Estratégias de deploy e rollback
+
+**FIM:** sei isolar segredo de deploy.
+
+---
+
+### Aprender B — Estratégia
+
+- [ ] Blue-green e rollback
   - https://martinfowler.com/bliki/BlueGreenDeployment.html
+
+**FIM:** sei escolher estratégia e reverter.
 
 ## Critério de pronto
 
-- Merge na principal com gates verdes resulta em deploy sem toque manual
-- Deploy com healthcheck falho reverte sozinho
-- Sei dizer em 30s qual versão está em prod e quem deployou
+1. [ ] Deploy automático só com gates verdes
+2. [ ] Rollback automático em healthcheck falho
+3. [ ] Auditoria em 30 segundos
 
 ---
 

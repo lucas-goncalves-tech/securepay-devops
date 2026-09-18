@@ -14,26 +14,53 @@ Operar infra real com estado compartilhado e travas contra apply concorrente, ma
 
 ## O que fazer
 
-- [ ] Migrar estado Terraform local para backend remoto com versionamento
+### Etapa 1 — Estado seguro
+
+**INÍCIO:** estado local, apply concorrente corrompe.
+
+- [ ] Migrar estado para backend remoto com versionamento
 - [ ] Ativar locking contra applies concorrentes
-- [ ] Provisionar computação real mínima para API e banco gerenciado ou VM
-- [ ] Separar ambientes por workspace ou prefixo de estado
-- [ ] Estimar custo mensal antes de subir e desligar após validar
+- [ ] Separar ambientes por workspace ou prefixo
+
+**FIM:** dois applies simultâneos não corrompem.
+
+---
+
+### Etapa 2 — Custo e computação
+
+**INÍCIO:** custo desconhecido.
+
+- [ ] Estimar custo mensal antes de subir
+- [ ] Provisionar computação mínima para API e banco
+- [ ] Desligar após validar, sem órfãos
+
+**FIM:** custo documentado; destroy limpo.
 
 ## O que aprender
 
-- [ ] Backends remotos e locking
+### Aprender A — Backend remoto
+
+- [ ] Backends e locking
   - https://developer.hashicorp.com/terraform/language/backend
   - https://docs.aws.amazon.com/s3/
   - https://docs.aws.amazon.com/dynamodb/
-- [ ] FinOps básico: calculadora e right-sizing
+
+**FIM:** sei explicar state + lock.
+
+---
+
+### Aprender B — FinOps
+
+- [ ] Calculadora e right-sizing
   - https://calculator.aws.amazon.com/
+
+**FIM:** sei estimar antes de aplicar.
 
 ## Critério de pronto
 
-- Dois applies simultâneos não corrompem o estado
-- Custo estimado documentado antes do apply real
-- Sei destruir tudo sem deixar recurso órfão cobrado
+1. [ ] Lock funcional
+2. [ ] Custo pré-documentado
+3. [ ] Destroy sem cobrança residual
 
 ---
 

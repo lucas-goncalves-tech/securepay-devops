@@ -14,23 +14,42 @@ Impedir que credenciais e arquivos de ambiente vazem para o git, com detecção 
 
 ## O que fazer
 
+### Etapa 1 — Detecção
+
+**INÍCIO:** segredo pode passar despercebido.
+
 - [ ] Adotar scanner de segredos no pré-commit e no CI
 - [ ] Criar baseline de achados legítimos vs vazamento real
+
+**FIM:** baseline existe; scanner distingue falso positivo de vazamento.
+
+---
+
+### Etapa 2 — Bloqueio e higiene
+
+**INÍCIO:** detecção sem consequência.
+
 - [ ] Bloquear merge se novo segredo for detectado
-- [ ] Higienizar histórico de variáveis sensíveis em arquivos de exemplo
-- [ ] Documentar fluxo seguro: exemplo versionado + valor real só via ambiente/secret
+- [ ] Higienizar variáveis sensíveis em arquivos de exemplo
+- [ ] Documentar fluxo: exemplo versionado + valor real só via ambiente/secret
+
+**FIM:** commit com chave mock é barrado; fluxo seguro documentado.
 
 ## O que aprender
 
-- [ ] Gestão de segredos e higiene em repos
+### Aprender A — Segredos
+
+- [ ] Gestão e higiene em repos
   - https://gitleaks.io/
   - https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions
 
+**FIM:** sei dizer onde o segredo mora em cada ambiente.
+
 ## Critério de pronto
 
-- Commit com chave mock é barrado automaticamente
-- Baseline existe e pipeline distingue falso positivo de vazamento real
-- Sei explicar onde o segredo mora em cada ambiente (local, CI, prod)
+1. [ ] Chave mock barrada automaticamente
+2. [ ] Baseline funcional
+3. [ ] Explicação local/CI/prod
 
 ---
 

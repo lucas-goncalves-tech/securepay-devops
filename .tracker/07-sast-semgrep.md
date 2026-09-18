@@ -14,23 +14,42 @@ Barrar padrões inseguros no código Java antes do merge, sem depender de revis�
 
 ## O que fazer
 
+### Etapa 1 — Gate SAST
+
+**INÍCIO:** padrão inseguro só aparece em revisão (ou nunca).
+
 - [ ] Adotar scanner SAST com regras focadas em Java
 - [ ] Ativar modo bloqueante apenas para severidade ERROR
 - [ ] Integrar ao CI como gate obrigatório
-- [ ] Zerar violações ERROR existentes ou justificar como exceção
-- [ ] Documentar como adicionar nova regra sem quebrar a pipeline à toa
+
+**FIM:** PR com padrão mapeado falha sozinho.
+
+---
+
+### Etapa 2 — Zerar e governar
+
+**INÍCIO:** gate existe, mas backlog ERROR aberto.
+
+- [ ] Zerar violações ERROR ou justificar como exceção registrada
+- [ ] Documentar como adicionar regra sem quebrar a pipeline à toa
+
+**FIM:** zero ERROR sem justificativa.
 
 ## O que aprender
 
-- [ ] Análise estática e shift-left security
+### Aprender A — SAST
+
+- [ ] Análise estática e shift-left
   - https://semgrep.dev/docs/
   - https://owasp.org/www-project-top-ten/
 
+**FIM:** sei diferenciar SAST vs SCA vs scan de segredos.
+
 ## Critério de pronto
 
-- PR com padrão inseguro mapeado falha automaticamente
-- Zero ERROR aberto sem justificativa registrada
-- Sei explicar diferença SAST vs SCA vs scan de segredos
+1. [ ] Gate bloqueante ativo
+2. [ ] Zero ERROR injustificado
+3. [ ] Política de novas regras
 
 ---
 

@@ -14,32 +14,60 @@ Empacotar o backend em imagem enxuta, segura e reproduzível, com banco orquestr
 
 ## O que fazer
 
-- [x] Criar build em múltiplos estágios separando compilação e runtime
-- [x] Reduzir imagem final para patamar enxuto com base mínima
-- [x] Rodar o processo como usuário sem privilégios (non-root)
+### Etapa 1 — Imagem enxuta e segura
+
+**INÍCIO:** build inclui ferramentas e roda como root.
+
+- [x] Criar build em múltiplos estágios separando compilação (JDK 21) e runtime (JRE mínimo, base Alpine)
+- [x] Reduzir imagem final para menos de 220 MB
+- [x] Rodar como usuário sem privilégios (ex: `spring`), nunca root
 - [x] Configurar flags de memória ciente de container para a JVM
-- [x] Orquestrar API + banco com volume persistente e healthcheck do banco
-- [x] Garantir que a API só sobe quando o banco está saudável
+- [x] Enxugar contexto excluindo `target/`, `.git/`, `.env`
+
+**FIM:** imagem < 220 MB, non-root, só com o artefato final.
+
+---
+
+### Etapa 2 — Orquestração com dependência saudável
+
+**INÍCIO:** imagem pronta, mas API pode subir antes do banco.
+
+- [x] Orquestrar API + banco (`postgres:16-alpine`) com volume persistente em `/var/lib/postgresql/data`
+- [x] Healthcheck do banco via `pg_isready`; URL interna `jdbc:postgresql://postgres:5432/securepay_db`
+- [x] Garantir que a API só sobe quando o banco está saudável (dependência condicional)
+- [x] Confirmar parada com SIGTERM e fechamento ordenado do pool HikariCP
+
+**FIM:** banco persiste após restart; API aguarda saúde antes de aceitar tráfego.
 
 ## O que aprender
 
-- [x] Multi-stage builds e boas práticas de imagem
+### Aprender A — Imagens
+
+- [x] Multi-stage builds e boas práticas
   - https://docs.docker.com/build/building/multi-stage/
   - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
-- [x] Compose: depends_on com condição de saúde e volumes
+- [x] JVM em containers
+  - https://docs.oracle.com/en/java/javase/21/gctuning/
+
+**FIM:** sei dizer o que engorda imagem e como provar o tamanho.
+
+---
+
+### Aprender B — Compose
+
+- [x] Ordem de subida e healthcheck
   - https://docs.docker.com/compose/how-tos/startup-order/
   - https://docs.docker.com/reference/compose-file/services/#healthcheck
-- [x] JVM em containers (memória e CPU)
-  - https://docs.oracle.com/en/java/javase/21/gctuning/
 - [x] PostgreSQL em container e persistência
   - https://hub.docker.com/_/postgres
 
+**FIM:** sei explicar por que dependência cega quebra o pool.
+
 ## Critério de pronto
 
-- Imagem final com menos de 220 MB e sem rodar como root (usuário dedicado, ex: `spring`)
-- Build em dois estágios: compilação com JDK 21 e runtime mínimo com JRE (ex: base Alpine); contexto enxuto excluindo `target/`, `.git/`, `.env`
-- Banco em imagem `postgres:16-alpine` com volume persistente em `/var/lib/postgresql/data` e readiness via `pg_isready`; URL interna `jdbc:postgresql://postgres:5432/securepay_db`
-- API aguarda banco saudável via dependência condicional antes de aceitar tráfego; parada propaga SIGTERM com fechamento ordenado do pool HikariCP
+1. [x] Imagem < 220 MB, non-root
+2. [x] Dados sobrevivem ao restart
+3. [x] API aguarda banco saudável; SIGTERM limpo
 
 ## Fora de escopo
 

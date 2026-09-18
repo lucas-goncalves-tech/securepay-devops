@@ -14,26 +14,52 @@ Evoluir de monolito conteinerizado para composição multi-serviço com mensager
 
 ## O que fazer
 
+### Etapa 1 — Composição e buffer
+
+**INÍCIO:** serviço único, chamada síncrona frágil.
+
 - [ ] Orquestrar múltiplos serviços com isolamento de rede por perfil
 - [ ] Adotar Redis Streams como buffer entre produtor e consumidor
-- [ ] Criar gateway de webhooks com validação, idempotência e retry
+
+**FIM:** produtor e consumidor desacoplados.
+
+---
+
+### Etapa 2 — Gateway confiável
+
+**INÍCIO:** webhooks sem validação nem retry.
+
+- [ ] Criar gateway com validação, idempotência e retry
 - [ ] Garantir entrega sem perda sob restart de consumidor
 - [ ] Observar lag de consumer group em tempo real
 
+**FIM:** restart retoma sem duplicar efeito.
+
 ## O que aprender
+
+### Aprender A — Streams
 
 - [ ] Redis Streams e consumer groups
   - https://redis.io/docs/latest/develop/data-types/streams/
-- [ ] Padrões de mensageria (at-least-once, idempotência)
+
+**FIM:** sei explicar offset e pending.
+
+---
+
+### Aprender B — Padrões
+
+- [ ] Mensageria assíncrona
   - https://microservices.io/patterns/communication-with-messaging.html
-- [ ] Design de webhooks confiáveis
+- [ ] Webhooks confiáveis
   - https://docs.github.com/en/webhooks/using-webhooks/best-practices-for-using-webhooks
+
+**FIM:** sei decidir fila vs síncrona.
 
 ## Critério de pronto
 
-- Consumidor reiniciado retoma de onde parou sem duplicar efeito
-- Webhook com mesma chave de idempotência não gera efeito colateral duplo
-- Sei explicar quando usar fila vs chamada síncrona
+1. [ ] Resume sem perda nem duplicação
+2. [ ] Idempotência provada
+3. [ ] Lag observável
 
 ---
 

@@ -14,34 +14,83 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 ## O que fazer
 
-- [ ] Declarar provider AWS `hashicorp/aws` `~> 5.0` apontando endpoints `ec2` e `s3` para `http://localhost:4566`, região `sa-east-1`, credenciais mock, com `skip_credentials_validation` e `skip_requesting_account_id`
-- [ ] Criar VPC `10.0.0.0/16` com três tiers: pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (banco sem rota internet)
-- [ ] Criar SG da API com entrada HTTP `8080` e SG do banco com entrada `5432` exclusivamente via SG da API
-- [ ] Garantir que a porta `5432` nunca abre para `0.0.0.0/0` ou CIDR amplo
-- [ ] Criar bucket `securepay-financial-reports` com bloqueio total (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
-- [ ] Subir emulador local com `SERVICES=s3,ec2`, região `sa-east-1`, endpoint `http://localhost:4566` respondendo
-- [ ] Validar workflow: `init` → `validate` → `apply -auto-approve` → `plan -detailed-exitcode` com exit 0
+### Etapa 1 — Provider e emulador
+
+**INÍCIO:** nada declarado, nuvem local fora do ar.
+
+- [ ] Declarar provider `hashicorp/aws` `~> 5.0`, endpoints `ec2` e `s3` em `http://localhost:4566`, região `sa-east-1`, credenciais mock, com `skip_credentials_validation` e `skip_requesting_account_id`
+- [ ] Subir emulador local com `SERVICES=s3,ec2`, região `sa-east-1`, endpoint respondendo
+
+**FIM:** endpoint local responde; `init` e `validate` passam.
+
+---
+
+### Etapa 2 — Rede multi-tier
+
+**INÍCIO:** provider ok, rede única ou inexistente.
+
+- [ ] Criar VPC `10.0.0.0/16`
+- [ ] Criar pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (banco sem rota internet)
+
+**FIM:** três tiers endereçados e segregados.
+
+---
+
+### Etapa 3 — Segurança e storage
+
+**INÍCIO:** rede existe, mas banco pode estar exposto.
+
+- [ ] Criar SG da API com entrada `8080` e SG do banco com entrada `5432` exclusivamente via SG da API; nunca `0.0.0.0/0`
+- [ ] Criar bucket `securepay-financial-reports` com os 4 bloqueios (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
+
+**FIM:** banco só via SG da API; bucket 100% privado.
+
+---
+
+### Etapa 4 — Apply sem drift
+
+**INÍCIO:** código pronto, estado não aplicado.
+
+- [ ] Executar `init` → `validate` → `apply -auto-approve` → `plan -detailed-exitcode` com exit 0
+
+**FIM:** plan final exit 0, sem pendências.
 
 ## O que aprender
 
-- [ ] Sintaxe HCL, estado e detecção de drift
+### Aprender A — Terraform base
+
+- [ ] HCL, estado e drift
   - https://developer.hashicorp.com/terraform/docs
   - https://developer.hashicorp.com/terraform/cli/commands/plan
-- [ ] VPC, subnets, route tables e security groups na AWS
+
+**FIM:** sei explicar idempotência e drift.
+
+---
+
+### Aprender B — Rede e storage AWS
+
+- [ ] VPC, subnets, route tables, SGs
   - https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
   - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
-- [ ] S3 e bloqueio de acesso público
+- [ ] S3 e bloqueio público
   - https://docs.aws.amazon.com/s3/
-- [ ] Integração Terraform com emulador local
+
+**FIM:** sei justificar 3 tiers e SG encadeado.
+
+---
+
+### Aprender C — Emulador local
+
+- [ ] Integração com Terraform
   - https://docs.localstack.cloud/user-guide/integrations/terraform/
+
+**FIM:** sei apontar endpoint e serviços emulados.
 
 ## Critério de pronto
 
-- `plan -detailed-exitcode` com exit 0 (sem mudanças pendentes após apply)
-- Banco inalcançável da internet, só via SG da API; `5432` jamais em `0.0.0.0/0`
-- Bucket `securepay-financial-reports` 100% privado com os 4 bloqueios ativos
-- VPC exata `10.0.0.0/16` com subnets `10.0.1.0/24`, `10.0.2.0/24`, `10.0.3.0/24`
-- Sei explicar por que 3 tiers e não rede única
+1. [ ] `plan -detailed-exitcode` exit 0
+2. [ ] `5432` jamais em `0.0.0.0/0`
+3. [ ] Bucket privado com 4 bloqueios; VPC e subnets exatas
 
 ## Fora de escopo
 

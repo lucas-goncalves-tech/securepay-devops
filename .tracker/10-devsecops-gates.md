@@ -14,25 +14,51 @@ Aparafusar higiene de segredos, SAST e SCA na pipeline multi-serviço como gates
 
 ## O que fazer
 
-- [ ] Gate 1: scan de segredos bloqueando vazamento
+### Etapa 1 — Três gates
+
+**INÍCIO:** pipeline só testa, não protege.
+
+- [ ] Gate 1: segredos bloqueando vazamento
 - [ ] Gate 2: SAST bloqueando padrões inseguros
-- [ ] Gate 3: SCA (dependências e imagem) bloqueando CVEs altas e críticas
+- [ ] Gate 3: SCA bloqueando CVEs altas e críticas
+
+**FIM:** cada gate falha isolado com mensagem acionável.
+
+---
+
+### Etapa 2 — Sintonia
+
+**INÍCIO:** gates barulhentos ou lentos.
+
 - [ ] Diferenciar severidade que falha vs que só alerta
-- [ ] Medir tempo adicionado pelos gates e otimizar com cache
+- [ ] Medir tempo adicionado e otimizar com cache
+
+**FIM:** verde significa limpo; custo em minutos conhecido.
 
 ## O que aprender
 
-- [ ] DevSecOps e quality gates
+### Aprender A — Gates
+
+- [ ] DevSecOps
   - https://owasp.org/www-project-devsecops-guideline/
-- [ ] SCA e gestão de CVEs
+
+**FIM:** sei posicionar cada gate no fluxo.
+
+---
+
+### Aprender B — SCA
+
+- [ ] CVEs e dependências
   - https://aquasecurity.github.io/trivy/
   - https://docs.github.com/en/code-security/dependabot
 
+**FIM:** sei triar CVE relevante vs ruído.
+
 ## Critério de pronto
 
-- Cada gate falha isoladamente com mensagem acionável
-- Pipeline verde significa sem segredo, sem ERROR SAST e sem CVE alta/crítica
-- Sei dizer custo em minutos de cada gate
+1. [ ] Falhas isoladas e acionáveis
+2. [ ] Verde = sem segredo, sem ERROR, sem CVE alta/crítica
+3. [ ] Tempo por gate medido
 
 ---
 

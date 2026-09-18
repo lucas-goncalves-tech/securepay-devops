@@ -14,27 +14,53 @@ Garantir que perda total da VPS não significa perda de dados, com restore prova
 
 ## O que fazer
 
-- [ ] Agendar dump comprimido do banco em horário de baixo tráfego
+### Etapa 1 — Rotina
+
+**INÍCIO:** sem backup, dado único na VPS.
+
+- [ ] Agendar dump comprimido em horário de baixo tráfego
 - [ ] Enviar para storage off-site com retenção definida
 - [ ] Criptografar backup em repouso
-- [ ] Testar restore em ambiente limpo e medir tempo (RTO)
-- [ ] Definir RPO e documentar procedimento de emergência em 1 página
+
+**FIM:** backup diário off-site com retenção.
+
+---
+
+### Etapa 2 — Prova de restore
+
+**INÍCIO:** backup existe, restore nunca testado.
+
+- [ ] Testar restore em ambiente limpo e medir RTO
+- [ ] Definir RPO e documentar emergência em 1 página
+
+**FIM:** 100% dos críticos restaurados no RTO; runbook executável de cabeça.
 
 ## O que aprender
 
-- [ ] Backup e restore PostgreSQL
+### Aprender A — Banco
+
+- [ ] Dump e restore
   - https://www.postgresql.org/docs/current/app-pgdump.html
   - https://www.postgresql.org/docs/current/app-pgrestore.html
-- [ ] Storage e lifecycle de retenção
+
+**FIM:** sei rodar dump e restore.
+
+---
+
+### Aprender B — DR
+
+- [ ] Storage e retenção
   - https://docs.aws.amazon.com/s3/
-- [ ] RPO, RTO e plano de DR
+- [ ] RPO, RTO
   - https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html
+
+**FIM:** sei definir RPO/RTO do negócio.
 
 ## Critério de pronto
 
-- Backup diário existe off-site com retenção aplicada
-- Restore testado restaura 100% dos dados críticos dentro do RTO
-- Sei executar o runbook de cabeça em incidente simulado
+1. [ ] Backup diário com retenção
+2. [ ] Restore 100% no RTO
+3. [ ] Runbook em 1 página
 
 ---
 

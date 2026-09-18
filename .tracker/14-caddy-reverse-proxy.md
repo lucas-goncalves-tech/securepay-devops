@@ -14,26 +14,51 @@ Expor a API com HTTPS válido, roteamento por host e headers de segurança, sem 
 
 ## O que fazer
 
-- [ ] Subir reverse proxy como porta de entrada única
-- [ ] Emitir TLS automático com renovação sem downtime
+### Etapa 1 — Entrada única
+
+**INÍCIO:** API exposta direto, sem TLS.
+
+- [ ] Subir reverse proxy como porta única
 - [ ] Rotejar por domínio para upstreams internos
+
+**FIM:** tráfego externo entra só pelo proxy.
+
+---
+
+### Etapa 2 — Segurança e borda
+
+**INÍCIO:** HTTP puro, sem headers.
+
+- [ ] Emitir TLS automático com renovação sem downtime
 - [ ] Aplicar headers de segurança padrão
-- [ ] Ativar compressão e logs de acesso estruturados
+- [ ] Ativar compressão e logs estruturados
+
+**FIM:** HTTPS válido; HTTP redireciona; headers presentes.
 
 ## O que aprender
 
-- [ ] Reverse proxy L7, TLS e ACME
+### Aprender A — Proxy e TLS
+
+- [ ] L7, ACME e certificados
   - https://caddyserver.com/docs/
   - https://letsencrypt.org/how-it-works/
-- [ ] Headers de segurança
+
+**FIM:** sei explicar terminação vs passthrough.
+
+---
+
+### Aprender B — Headers
+
+- [ ] Segurança de resposta
   - https://owasp.org/www-project-secure-headers/
+
+**FIM:** sei listar headers obrigatórios.
 
 ## Critério de pronto
 
-- HTTPS válido com renovação automática ativa
-- HTTP redireciona para HTTPS
-- Headers de segurança presentes em resposta pública
-- Sei explicar terminação TLS vs passthrough
+1. [ ] HTTPS com renovação ativa
+2. [ ] Redirect HTTP→HTTPS
+3. [ ] Headers verificáveis
 
 ---
 

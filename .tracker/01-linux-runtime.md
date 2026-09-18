@@ -14,30 +14,67 @@ Garantir que o backend sobe de forma previsível no Linux local, com configuraç
 
 ## O que fazer
 
-- [x] Definir configuração por variáveis de ambiente (URL do banco, usuário, senha, porta, segredo JWT)
-- [x] Implementar healthcheck em duas camadas: socket TCP (L4) + endpoint HTTP de saúde (L7)
-- [x] Validar que o processo responde UP na porta configurada
-- [x] Tratar SIGTERM para shutdown gracioso sem derrubar requisições em voo
+> Faça na ordem. Cada Etapa tem INÍCIO e FIM claros — só avance quando o FIM estiver cumprido.
+
+### Etapa 1 — Configuração por ambiente
+
+**INÍCIO:** nenhuma variável documentada.
+
+- [x] Definir URL do banco, usuário, senha, porta e segredo JWT via ambiente
 - [x] Documentar como subir banco local e API na ordem correta
+
+**FIM:** variáveis esperadas conhecidas — URL `jdbc:postgresql://localhost:5432/securepay_db`, usuário `postgres`, senha `postgres`, porta `8080`, JWT 256 bits em hex ou base64.
+
+---
+
+### Etapa 2 — Healthcheck em duas camadas
+
+**INÍCIO:** processo sobe mas ninguém prova que está saudável.
+
+- [x] Implementar teste L4 via socket TCP (`/dev/tcp` ou `nc -z`)
+- [x] Implementar teste L7 via `/actuator/health` exigindo `"UP"`
+- [x] Validar que o processo responde UP na porta configurada, conferida via `ss -tulpn`
+
+**FIM:** healthcheck retorna exit 0 saudável / 1 falho; API responde 200 com `status UP`.
+
+---
+
+### Etapa 3 — Shutdown gracioso
+
+**INÍCIO:** healthcheck passa, mas kill pode corromper.
+
+- [x] Tratar SIGTERM para fechar conexões sem derrubar requisições em voo
+
+**FIM:** SIGTERM encerra sem conexões cortadas abruptamente.
 
 ## O que aprender
 
-- [x] Processos, sinais POSIX e variáveis de ambiente no Linux
+### Aprender A — Processos e ambiente
+
+- [x] Sinais POSIX e variáveis de ambiente
   - https://man7.org/linux/man-pages/man7/signal.7.html
   - https://www.gnu.org/software/bash/manual/html_node/Environment.html
-- [x] Sockets TCP e diagnóstico de portas em uso
+
+**FIM:** sei explicar SIGTERM vs kill forçado.
+
+---
+
+### Aprender B — Rede e saúde
+
+- [x] Sockets TCP e portas em uso
   - https://man7.org/linux/man-pages/man8/ss.8.html
 - [x] Health indicators do Spring Boot Actuator
   - https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
-- [x] PostgreSQL: conexão local e readiness
+- [x] PostgreSQL local e readiness
   - https://www.postgresql.org/docs/current/app-pg-isready.html
+
+**FIM:** sei diagnosticar porta ocupada vs app fora do ar.
 
 ## Critério de pronto
 
-- API responde 200 com corpo `status UP` no endpoint de saúde
-- Healthcheck retorna exit 0 quando saudável e 1 quando falho
-- SIGTERM encerra sem conexões cortadas abruptamente
-- Variáveis esperadas: URL `jdbc:postgresql://localhost:5432/securepay_db`, usuário `postgres`, senha `postgres`, porta `8080`, segredo JWT de 256 bits em hex ou base64; L4 via `/dev/tcp` ou `nc -z`, L7 em `/actuator/health` com `"UP"`, portas conferidas via `ss -tulpn`
+1. [x] API 200 com `status UP`
+2. [x] Healthcheck exit 0/1 correto
+3. [x] SIGTERM limpo
 
 ## Fora de escopo
 
