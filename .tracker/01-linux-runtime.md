@@ -1,62 +1,42 @@
 ---
 aliases: [issue-01, linux-runtime, stage-01]
-tags: [tracker, issue, todo, study-needed]
-status: todo
-stage: 01
-rfc: RFC-001
+tags: [tracker, issue, done]
+status: done
+trilha: trilha-1-core
+prioridade: alta
 ---
 
-# Issue #01: Linux Runtime, Processos, Redes L4 e Sinais POSIX
+# Issue #01: Linux Runtime, Env, Healthcheck e Sinais POSIX
 
-## Acceptance Criteria
+## Objetivo
 
-### AC-1: Variáveis de Ambiente Desacopladas (`.env` e `.env.example`)
+Garantir que o backend sobe de forma previsível no Linux local, com configuração por ambiente e desligamento gracioso.
 
-Criar `stages-labs/spring-cloud-platform/01-linux-runtime/.env` com as variáveis esperadas pela aplicação:
+## O que fazer
 
-| Variável | Exemplo |
-|----------|---------|
-| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://localhost:5432/securepay_db` |
-| `SPRING_DATASOURCE_USERNAME` | `postgres` |
-| `SPRING_DATASOURCE_PASSWORD` | `postgres` |
-| `PORT` | `8080` |
-| `JWT_SECRET` | chave de 256 bits em hexadecimal ou base64 |
+- [x] Definir configuração por variáveis de ambiente (URL do banco, usuário, senha, porta, segredo JWT)
+- [x] Implementar healthcheck em duas camadas: socket TCP (L4) + endpoint HTTP de saúde (L7)
+- [x] Validar que o processo responde UP na porta configurada
+- [x] Tratar SIGTERM para shutdown gracioso sem derrubar requisições em voo
+- [x] Documentar como subir banco local e API na ordem correta
 
-- [ ] `.env` criado com todas as 5 variáveis acima
-- [ ] `.env` fora do versionamento (em `.gitignore`)
-- [ ] `.env.example` criado como modelo de referência (mesmas chaves, valores placeholder)
+## O que aprender
 
-### AC-2: Script de Healthcheck Automatizado (`healthcheck.sh`)
+- [x] Processos, sinais POSIX e variáveis de ambiente no Linux
+  - https://man7.org/linux/man-pages/man7/signal.7.html
+  - https://www.gnu.org/software/bash/manual/html_node/Environment.html
+- [x] Sockets TCP e diagnóstico de portas em uso
+  - https://man7.org/linux/man-pages/man8/ss.8.html
+- [x] Health indicators do Spring Boot Actuator
+  - https://docs.spring.io/spring-boot/reference/actuator/endpoints.html
+- [x] PostgreSQL: conexão local e readiness
+  - https://www.postgresql.org/docs/current/app-pg-isready.html
 
-Criar `stages-labs/spring-cloud-platform/01-linux-runtime/healthcheck.sh`:
+## Critério de pronto
 
-- [ ] Permissão de execução (`chmod +x`)
-- [ ] Teste L4: escuta de porta via `nc -z`, `/dev/tcp` ou `curl`
-- [ ] Teste L7: consulta `/actuator/health` e verifica `status = "UP"`
-- [ ] Exit code `0` quando saudável, `1` quando inacessível ou status diferente de UP
-
-## Scope
-
-- Linux processes, file permissions, `.env` variables, local ports (`ss -tulpn`), PostgreSQL on host, bash healthcheck script
-- **Out of scope:** Docker, Docker Compose, Terraform, Kubernetes, LocalStack, CI/CD
-
-## Study Needed
-
-- [ ] Spring Boot Externalized Configuration
-- [ ] Spring Boot Graceful Shutdown
-- [ ] Linux Signals and Traps (man 7 signal)
-
-## References
-
-- [Spring Boot Externalized Configuration](https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.external-config)
-- [Spring Boot Graceful Shutdown](https://docs.spring.io/spring-boot/docs/current/reference/html/web.html#web.graceful-shutdown)
-- [Linux Signals and Traps](https://man7.org/linux/man-pages/man7/signal.7.html)
-
-## Validation
-
-```bash
-python3 stages-labs/spring-cloud-platform/01-linux-runtime/verify.py
-```
+- API responde 200 com corpo `status UP` no endpoint de saúde
+- Healthcheck retorna exit 0 quando saudável e 1 quando falho
+- SIGTERM encerra sem conexões cortadas abruptamente
 
 ---
 

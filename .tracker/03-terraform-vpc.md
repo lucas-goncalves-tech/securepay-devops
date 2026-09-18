@@ -2,83 +2,48 @@
 aliases: [issue-03, terraform-vpc, stage-03]
 tags: [tracker, issue, todo, study-needed]
 status: todo
-stage: 03
-rfc: RFC-003
+trilha: trilha-1-core
+prioridade: alta
 ---
 
-# Issue #03: Infraestrutura como Código (IaC) com Terraform e LocalStack
+# Issue #03: Infraestrutura como Código com Terraform e VPC Multi-Tier
 
-## Acceptance Criteria
+## Objetivo
 
-### AC-1: Provider AWS para LocalStack (`infra/ledger-service/terraform/provider.tf`)
+Declarar rede e storage de forma idempotente em ambiente local compatível com AWS, com banco isolado e sem vazamento de porta sensível.
 
-- [ ] Provider `hashicorp/aws` versão `~> 5.0`
-- [ ] Endpoints (`ec2`, `s3`) redirecionados para `http://localhost:4566`
-- [ ] Região `sa-east-1`, credenciais de emulação (`mock_key`/`mock_secret` ou `test`)
-- [ ] `skip_credentials_validation = true` e `skip_requesting_account_id = true`
+## O que fazer
 
-### AC-2: VPC Multi-Tier (`infra/ledger-service/terraform/vpc.tf`)
+- [ ] Declarar provider AWS apontando para endpoint local, região sudeste BR, credenciais mock
+- [ ] Criar VPC com três tiers: pública (load balancers), privada (API) e isolada (banco sem rota internet)
+- [ ] Criar security groups encadeados: banco só aceita porta do banco via SG da API
+- [ ] Garantir que a porta do banco nunca abre para a internet
+- [ ] Criar bucket privado com bloqueio total de acesso público
+- [ ] Subir emulador local de nuvem com serviços de computação e storage
+- [ ] Validar workflow declarativo: init → validate → apply → plan sem drift
 
-- [ ] `aws_vpc` com CIDR `10.0.0.0/16`
-- [ ] **Sub-rede Pública** `10.0.1.0/24` — entrada para load balancers
-- [ ] **Sub-rede Privada** `10.0.2.0/24` — execução da API `ledger-service`
-- [ ] **Sub-rede de Dados Isolada** `10.0.3.0/24` — banco PostgreSQL, sem rota para internet
+## O que aprender
 
-### AC-3: Security Groups Encadeados (`infra/ledger-service/terraform/security_groups.tf`)
+- [ ] Sintaxe HCL, estado e detecção de drift
+  - https://developer.hashicorp.com/terraform/docs
+  - https://developer.hashicorp.com/terraform/cli/commands/plan
+- [ ] VPC, subnets, route tables e security groups na AWS
+  - https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
+  - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
+- [ ] S3 e bloqueio de acesso público
+  - https://docs.aws.amazon.com/s3/
+- [ ] Integração Terraform com emulador local
+  - https://docs.localstack.cloud/user-guide/integrations/terraform/
 
-- [ ] SG da API: permite entrada HTTP na porta `8080`
-- [ ] SG do banco: permite entrada na porta `5432` **exclusivamente** originada pelo SG da API (`security_groups = [aws_security_group.<api_sg>.id]`)
-- [ ] **Proibido:** porta `5432` associada a `0.0.0.0/0` ou blocos CIDR amplos
+## Critério de pronto
 
-### AC-4: Bucket S3 Privado (`infra/ledger-service/terraform/s3.tf`)
-
-- [ ] `aws_s3_bucket` nome `securepay-financial-reports`
-- [ ] `aws_s3_bucket_public_access_block` com todos os bloqueios: `block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`
-
-### AC-5: Orquestração LocalStack
-
-- [ ] LocalStack rodando via `docker compose -f infra/platform/localstack/docker-compose.yml up -d`
-- [ ] Endpoint `http://localhost:4566` responde com sucesso
-
-### AC-6: Inicialização e Validação do Terraform
-
-- [ ] `terraform init` no diretório `infra/ledger-service/terraform/`
-- [ ] `terraform validate` passa sem erros
-
-### AC-7: Aplicação Inicial do Estado
-
-- [ ] `terraform apply -auto-approve` provisiona a topologia no LocalStack
-
-### AC-8: Auditoria de Drift
-
-- [ ] `terraform plan -detailed-exitcode` retorna Exit Code 0 (sem alterações pendentes)
-
-## Scope
-
-- Terraform HCL, AWS Provider local (`localhost:4566`), VPC `10.0.0.0/16` with public/private/isolated subnets, Security Groups without port 5432 leakage, private S3 bucket, empirical drift detection (`terraform plan`)
-- **Out of scope:** Kubernetes, Helm, CloudWatch Logs, AWS EKS, CI/CD pipelines
-
-## Study Needed
-
-- [ ] Terraform AWS VPC Resource
-- [ ] Terraform AWS Security Group Rules
-- [ ] LocalStack Terraform Integration
-- [ ] HCL syntax and state management
-
-## References
-
-- [Terraform AWS VPC](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc)
-- [Terraform AWS Security Group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group)
-- [LocalStack Terraform Guide](https://docs.localstack.cloud/user-guide/integrations/terraform/)
-
-## Validation
-
-```bash
-python3 stages-labs/spring-cloud-platform/03-terraform-vpc/verify.py
-```
+- Plan final com exit 0 (sem mudanças pendentes após apply)
+- Banco inalcançável da internet, só via SG da API
+- Bucket 100% privado
+- Sei explicar por que 3 tiers e não rede única
 
 ---
 
 **Prev:** [[02-docker-compose]]
-**Next:** [[04-github-actions]]
+**Next:** [[06-secrets-hygiene]]
 **Board:** [[BOARD]]

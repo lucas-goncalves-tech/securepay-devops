@@ -2,66 +2,43 @@
 aliases: [issue-02, docker-compose, stage-02]
 tags: [tracker, issue, done]
 status: done
-stage: 02
-rfc: RFC-002
+trilha: trilha-1-core
+prioridade: alta
 ---
 
 # Issue #02: Conteinerização Profissional e Docker Compose
 
-## Acceptance Criteria
+## Objetivo
 
-### AC-1: Dockerfile Multi-Stage (`backend/Dockerfile`)
+Empacotar o backend em imagem enxuta, segura e reproduzível, com banco orquestrado e dependência saudável.
 
-- [ ] **Estágio de Build (`builder`):** Imagem base com JDK 21 para compilar e gerar o `.jar`
-- [ ] **Estágio de Runtime (`runtime`):** Imagem minimalista com JRE (ex: `eclipse-temurin:21-jre-alpine`), copiando apenas o `.jar` do builder
-- [ ] **Execução Não-Root:** Grupo e usuário dedicados (`addgroup -S spring && adduser -S spring -G spring`) + diretiva `USER spring`
-- [ ] **Tamanho Limite:** Imagem final < 220 MB
-- [ ] **`.dockerignore`:** Exclui `target/`, `.git/`, `.env`
+## O que fazer
 
-### AC-2: Orquestração Declarativa (`docker-compose.yaml`)
+- [x] Criar build em múltiplos estágios separando compilação e runtime
+- [x] Reduzir imagem final para patamar enxuto com base mínima
+- [x] Rodar o processo como usuário sem privilégios (non-root)
+- [x] Configurar flags de memória ciente de container para a JVM
+- [x] Orquestrar API + banco com volume persistente e healthcheck do banco
+- [x] Garantir que a API só sobe quando o banco está saudável
 
-Serviço `postgres`:
-- [ ] Imagem `postgres:16-alpine`
-- [ ] Volume nomeado persistindo `/var/lib/postgresql/data`
-- [ ] `healthcheck` com `pg_isready -U postgres`
+## O que aprender
 
-Serviço `ledger-service`:
-- [ ] Contexto de build apontando para o backend
-- [ ] Variável `SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/securepay_db`
-- [ ] `depends_on` com `condition: service_healthy`
+- [x] Multi-stage builds e boas práticas de imagem
+  - https://docs.docker.com/build/building/multi-stage/
+  - https://docs.docker.com/develop/develop-images/dockerfile_best-practices/
+- [x] Compose: depends_on com condição de saúde e volumes
+  - https://docs.docker.com/compose/how-tos/startup-order/
+  - https://docs.docker.com/reference/compose-file/services/#healthcheck
+- [x] JVM em containers (memória e CPU)
+  - https://docs.oracle.com/en/java/javase/21/gctuning/
+- [x] PostgreSQL em container e persistência
+  - https://hub.docker.com/_/postgres
 
-### AC-3: Validação de Execução no Terminal
+## Critério de pronto
 
-- [ ] `docker compose up -d` — ambos os serviços sobem
-- [ ] `docker compose ps` — ambos em estado `healthy`
-
-### AC-4: Encerramento Gracioso com Sinal SIGTERM
-
-- [ ] `docker compose stop ledger-service` — Spring Boot intercepta SIGTERM
-- [ ] Logs mostram HikariCP fechando conexões ordenadamente antes do exit
-
-## Scope
-
-- Multi-stage Dockerfile, Alpine image reduction, non-root user (`USER spring`), `docker-compose.yml` with `condition: service_healthy`, volume persistence
-- **Out of scope:** Terraform, Kubernetes/Helm, LocalStack AWS, AWS ECS/EKS, remote CI/CD
-
-## Study Completed
-
-- [x] Docker Multi-stage Builds Best Practices
-- [x] Compose Specification: depends_on
-- [x] Spring Boot in Docker (Official Guide)
-
-## References
-
-- [Docker Multi-stage Builds](https://docs.docker.com/build/building/multi-stage/)
-- [Compose Specification: depends_on](https://docs.docker.com/compose/compose-file/05-services/#depends_on)
-- [Spring Boot in Docker](https://spring.io/guides/gs/spring-boot-docker/)
-
-## Validation
-
-```bash
-python3 stages-labs/spring-cloud-platform/02-docker-compose/verify.py
-```
+- Imagem final abaixo do teto definido e sem rodar como root
+- Banco persiste dados após restart do compose
+- API aguarda banco saudável antes de aceitar tráfego
 
 ---
 

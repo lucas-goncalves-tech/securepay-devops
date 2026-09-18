@@ -2,72 +2,47 @@
 aliases: [issue-04, github-actions, stage-04]
 tags: [tracker, issue, todo, study-needed]
 status: todo
-stage: 04
-rfc: RFC-004
+trilha: trilha-1-core
+prioridade: alta
 ---
 
-# Issue #04: Esteira de CI/CD com GitHub Actions, Trivy e IaC Gate
+# Issue #04: Esteira CI/CD com Testes, Trivy e Gate IaC
 
-## Acceptance Criteria
+## Objetivo
 
-### AC-1: Workflow e Gatilhos (`.github/workflows/ledger-service-ci.yml`)
+Automatizar build, teste, scan de vulnerabilidades e validação de infra a cada push, com otimização de custo em staging.
 
-- [ ] Gatilhos `push` e `pull_request` para branches `main` e `master`
-- [ ] Filtro de caminhos: `app/ledger-service/**` dispara backend; `infra/ledger-service/**` ou `infra/platform/**` dispara IaC gate
+## O que fazer
 
-### AC-2: Job 1 — Verificação do Backend (`backend-verification`)
+- [ ] Criar workflow com gatilhos em push e PR para branches principais, separando job de backend e job de IaC por filtro de mudanças
+- [ ] Job backend: build Java LTS com cache Maven + testes automatizados
+- [ ] Job container-security: build da imagem + scan falhando em severidade alta e crítica
+- [ ] Job terraform-gate: fmt check → init → validate → plan contra emulador local
+- [ ] Job staging-cost-optimizer: stop/start programado em horário comercial + disparo manual
+- [ ] Exigir pipeline verde como pré-requisito de merge
 
-- [ ] Ambiente Java 21 LTS com cache Maven (`cache: 'maven'`)
-- [ ] Executa `./mvnw clean test` ou `./mvnw verify` no diretório `app/ledger-service`
+## O que aprender
 
-### AC-3: Job 2 — Build de Contêiner e Varredura de Segurança (`container-security`)
+- [ ] Sintaxe de workflows, jobs, triggers e filtros de path
+  - https://docs.github.com/en/actions/writing-workflows
+  - https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run
+- [ ] Build Java com Maven no CI com cache
+  - https://github.com/actions/setup-java
+  - https://maven.apache.org/surefire/maven-surefire-plugin/
+- [ ] Scan de imagem com Trivy em modo bloqueante
+  - https://aquasecurity.github.io/trivy/
+  - https://github.com/aquasecurity/trivy-action
+- [ ] Automação Terraform no CI
+  - https://developer.hashicorp.com/terraform/tutorials/github-actions
 
-- [ ] Build da imagem Docker usando `app/ledger-service/Dockerfile`
-- [ ] Varredura com **Trivy** (`aquasecurity/trivy-action` ou CLI)
-- [ ] Falha o job se houver vulnerabilidades `CRITICAL` ou `HIGH`
+## Critério de pronto
 
-### AC-4: Job 3 — Validação de Infraestrutura (`terraform-gate`)
-
-- [ ] Service container LocalStack (`localstack/localstack:4.4.0`) porta `4566:4566`, vars: `SERVICES=s3,ec2`, `AWS_DEFAULT_REGION=sa-east-1`
-- [ ] `working-directory: infra/ledger-service/terraform`
-- [ ] Executa: `terraform fmt -check`, `terraform init`, `terraform validate`, `terraform plan`
-
-### AC-5: Job 4 — Automação FinOps de Staging
-
-- [ ] Gatilho agendado `schedule` (cron noturno, ex: `0 22 * * 1-5`) para desligar staging
-- [ ] Gatilho manual `workflow_dispatch` com input `action` (`start` ou `stop`)
-- [ ] Pode morar no CI workflow ou em workflow dedicado (`staging-lifecycle.yml`)
-
-### AC-6: Validação Sintática
-
-- [ ] YAML íntegro, indentação correta, executáveis invocados existem
-
-## Scope
-
-- GitHub Actions workflow YAML, Maven build/test (`./mvnw verify`), Docker image build, Trivy vulnerability scanning (`trivy image --severity HIGH,CRITICAL`), Terraform syntax validation (`terraform fmt` and `validate`)
-- **Out of scope:** Kubernetes GitOps (ArgoCD/Flux), AWS ECS Fargate deploy, Ansible
-
-## Study Needed
-
-- [ ] Building and Testing Java with Maven in GitHub Actions
-- [ ] Aqua Security Trivy Action
-- [ ] Automating Terraform with GitHub Actions
-- [ ] GitHub Actions workflow syntax
-
-## References
-
-- [Building and Testing Java with Maven](https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven)
-- [Trivy Action](https://github.com/aquasecurity/trivy-action)
-- [Automating Terraform with GitHub Actions](https://developer.hashicorp.com/terraform/tutorials/automation/github-actions)
-
-## Validation
-
-```bash
-python3 stages-labs/spring-cloud-platform/04-github-actions/verify.py
-```
+- Push com teste quebrado ou vulnerabilidade crítica falha o pipeline
+- Erro de formatação ou validação IaC bloqueia merge
+- Sei explicar cada gate e seu custo se removido
 
 ---
 
-**Prev:** [[03-terraform-vpc]]
+**Prev:** [[08-pipeline-hardening]]
 **Next:** [[05-observability]]
 **Board:** [[BOARD]]
