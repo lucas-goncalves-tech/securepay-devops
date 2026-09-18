@@ -14,12 +14,12 @@ Provar em produção local que a API sustenta concorrência real sem starvation 
 
 ## O que fazer
 
-- [ ] Orquestrar stack de observabilidade (coletor + dashboard) na mesma rede da API
-- [ ] Expor métricas da aplicação via endpoint Prometheus do Actuator
-- [ ] Configurar scraping em intervalo curto para o serviço ledger
-- [ ] Criar dashboard com 4 painéis: vazão HTTP por status, latência p95/p99 do transfer, pool HikariCP, heap JVM
-- [ ] Criar script de carga com dezenas de VUs contra endpoint de transferência com chave de idempotência
-- [ ] Validar SLOs: taxa de erro < 1% e p95 abaixo do teto sob carga
+- [ ] Orquestrar stack: coletor em `9090` e dashboard em `3000` na mesma rede da API
+- [ ] Expor métricas via `/actuator/prometheus` do Actuator
+- [ ] Configurar job `ledger-service` com scraping `5s`
+- [ ] Criar dashboard com 4 painéis: RPS por status (`http_server_requests_seconds_count`), p95/p99 de `/api/v1/payments/transfer`, HikariCP ativa/ociosa/pendente (`hikaricp_connections_active`, `_idle`, `_pending`), heap JVM (`jvm_memory_used_bytes{area="heap"}`)
+- [ ] Criar carga k6 com 50–100 VUs contra `/api/v1/payments/transfer` com header `X-Idempotency-Key`
+- [ ] Validar thresholds: `http_req_failed < 0.01` e `http_req_duration{p(95)<500}`; investigar starvation com `connection-timeout: 20s` em mente
 
 ## O que aprender
 
@@ -38,9 +38,15 @@ Provar em produção local que a API sustenta concorrência real sem starvation 
 
 ## Critério de pronto
 
-- Dashboard mostra RPS, p95/p99, pool e heap em tempo real
-- Carga com 50-100 VUs passa sem erro > 1% e sem starvation do banco
+- Dashboard mostra RPS, p95/p99, pool e heap em tempo real com as métricas exatas acima
+- Carga 50–100 VUs passa com `http_req_failed < 0.01` e p95 < 500ms, sem starvation do banco
+- Média ilusória (ex: 120ms) não esconde cauda p95/p99 (risco > 5s); sei apontar gargalo (GC, threads HTTP, contenção, pool)
 - Sei apontar no gráfico onde mora o gargalo (I/O, pool ou heap)
+
+## Fora de escopo
+
+- Proibido: Jaeger com OpenTelemetry Collector, Chaos Engineering complexo, clusters ELK
+- Foco exclusivo: scraping `/actuator/prometheus`, `prometheus.yml`, Grafana (RPS, p95/p99, HikariCP) e k6 sem starvation
 
 ---
 

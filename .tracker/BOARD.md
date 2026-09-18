@@ -6,6 +6,7 @@ tags: [tracker, board]
 # SecurePay DevOps — Board
 
 > Kanban profissional DevSecOps. Sem paths, sem comandos copy-paste.
+> Contexto consolidado em [[00-visao-geral|00 Visão Geral]] (pilares, E2E, metodologia).
 > 1 card por estágio. Foco: transformar o backend em plataforma profissional.
 > Ordem sugerida: 03 → 06 → 07 → 08 → 04 → 05 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
 

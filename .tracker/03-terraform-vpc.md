@@ -14,13 +14,13 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 ## O que fazer
 
-- [ ] Declarar provider AWS apontando para endpoint local, região sudeste BR, credenciais mock
-- [ ] Criar VPC com três tiers: pública (load balancers), privada (API) e isolada (banco sem rota internet)
-- [ ] Criar security groups encadeados: banco só aceita porta do banco via SG da API
-- [ ] Garantir que a porta do banco nunca abre para a internet
-- [ ] Criar bucket privado com bloqueio total de acesso público
-- [ ] Subir emulador local de nuvem com serviços de computação e storage
-- [ ] Validar workflow declarativo: init → validate → apply → plan sem drift
+- [ ] Declarar provider AWS `hashicorp/aws` `~> 5.0` apontando endpoints `ec2` e `s3` para `http://localhost:4566`, região `sa-east-1`, credenciais mock, com `skip_credentials_validation` e `skip_requesting_account_id`
+- [ ] Criar VPC `10.0.0.0/16` com três tiers: pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (banco sem rota internet)
+- [ ] Criar SG da API com entrada HTTP `8080` e SG do banco com entrada `5432` exclusivamente via SG da API
+- [ ] Garantir que a porta `5432` nunca abre para `0.0.0.0/0` ou CIDR amplo
+- [ ] Criar bucket `securepay-financial-reports` com bloqueio total (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
+- [ ] Subir emulador local com `SERVICES=s3,ec2`, região `sa-east-1`, endpoint `http://localhost:4566` respondendo
+- [ ] Validar workflow: `init` → `validate` → `apply -auto-approve` → `plan -detailed-exitcode` com exit 0
 
 ## O que aprender
 
@@ -37,10 +37,16 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 ## Critério de pronto
 
-- Plan final com exit 0 (sem mudanças pendentes após apply)
-- Banco inalcançável da internet, só via SG da API
-- Bucket 100% privado
+- `plan -detailed-exitcode` com exit 0 (sem mudanças pendentes após apply)
+- Banco inalcançável da internet, só via SG da API; `5432` jamais em `0.0.0.0/0`
+- Bucket `securepay-financial-reports` 100% privado com os 4 bloqueios ativos
+- VPC exata `10.0.0.0/16` com subnets `10.0.1.0/24`, `10.0.2.0/24`, `10.0.3.0/24`
 - Sei explicar por que 3 tiers e não rede única
+
+## Fora de escopo
+
+- Proibido: Kubernetes, Helm, CloudWatch Logs avançado, EKS, esteiras de CI/CD
+- Foco exclusivo: HCL, provider local em `localhost:4566`, VPC multi-tier, SGs sem vazamento em `5432`, bucket privado e drift via `plan`
 
 ---
 

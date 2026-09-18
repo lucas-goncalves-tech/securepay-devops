@@ -36,9 +36,15 @@ Empacotar o backend em imagem enxuta, segura e reproduzível, com banco orquestr
 
 ## Critério de pronto
 
-- Imagem final abaixo do teto definido e sem rodar como root
-- Banco persiste dados após restart do compose
-- API aguarda banco saudável antes de aceitar tráfego
+- Imagem final com menos de 220 MB e sem rodar como root (usuário dedicado, ex: `spring`)
+- Build em dois estágios: compilação com JDK 21 e runtime mínimo com JRE (ex: base Alpine); contexto enxuto excluindo `target/`, `.git/`, `.env`
+- Banco em imagem `postgres:16-alpine` com volume persistente em `/var/lib/postgresql/data` e readiness via `pg_isready`; URL interna `jdbc:postgresql://postgres:5432/securepay_db`
+- API aguarda banco saudável via dependência condicional antes de aceitar tráfego; parada propaga SIGTERM com fechamento ordenado do pool HikariCP
+
+## Fora de escopo
+
+- Proibido: Terraform, Kubernetes/Helm, LocalStack, ECS/EKS, CI/CD remoto
+- Foco exclusivo: multi-stage enxuto Alpine, usuário sem privilégios, ordenação por saúde e persistência de volume
 
 ---
 

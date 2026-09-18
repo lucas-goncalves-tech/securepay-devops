@@ -37,8 +37,15 @@ Garantir que o backend sobe de forma previsível no Linux local, com configuraç
 - API responde 200 com corpo `status UP` no endpoint de saúde
 - Healthcheck retorna exit 0 quando saudável e 1 quando falho
 - SIGTERM encerra sem conexões cortadas abruptamente
+- Variáveis esperadas: URL `jdbc:postgresql://localhost:5432/securepay_db`, usuário `postgres`, senha `postgres`, porta `8080`, segredo JWT de 256 bits em hex ou base64; L4 via `/dev/tcp` ou `nc -z`, L7 em `/actuator/health` com `"UP"`, portas conferidas via `ss -tulpn`
+
+## Fora de escopo
+
+- Proibido: Docker, Docker Compose, Terraform, Kubernetes, LocalStack, CI/CD
+- Foco exclusivo: processos Linux, permissões de arquivo, variáveis de ambiente, portas locais, PostgreSQL no host e healthcheck em bash
 
 ---
 
+**Prev:** [[00-visao-geral]]
 **Next:** [[02-docker-compose]]
 **Board:** [[BOARD]]

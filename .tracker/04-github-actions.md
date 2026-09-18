@@ -14,12 +14,12 @@ Automatizar build, teste, scan de vulnerabilidades e validação de infra a cada
 
 ## O que fazer
 
-- [ ] Criar workflow com gatilhos em push e PR para branches principais, separando job de backend e job de IaC por filtro de mudanças
-- [ ] Job backend: build Java LTS com cache Maven + testes automatizados
-- [ ] Job container-security: build da imagem + scan falhando em severidade alta e crítica
-- [ ] Job terraform-gate: fmt check → init → validate → plan contra emulador local
-- [ ] Job staging-cost-optimizer: stop/start programado em horário comercial + disparo manual
-- [ ] Exigir pipeline verde como pré-requisito de merge
+- [ ] Criar workflow com gatilhos `push` e `pull_request` em `main`/`master`, separando job de backend e job de IaC por filtro de mudanças
+- [ ] Job backend: Java 21 LTS com `cache: maven` + `./mvnw verify` (ou `clean test`)
+- [ ] Job container-security: build da imagem + scan Trivy que falha em `HIGH,CRITICAL`
+- [ ] Job terraform-gate: `fmt -check` → `init` → `validate` → `plan` contra emulador local (`localstack/localstack:4.4.0`, porta `4566`, `SERVICES=s3,ec2`, região `sa-east-1`)
+- [ ] Job staging-cost-optimizer: cron `0 22 * * 1-5` para pausar staging + `workflow_dispatch` com input `start`/`stop`
+- [ ] Exigir pipeline verde como pré-requisito de merge; YAML íntegro com indentação válida
 
 ## O que aprender
 
@@ -37,9 +37,15 @@ Automatizar build, teste, scan de vulnerabilidades e validação de infra a cada
 
 ## Critério de pronto
 
-- Push com teste quebrado ou vulnerabilidade crítica falha o pipeline
-- Erro de formatação ou validação IaC bloqueia merge
+- Push com teste quebrado ou vulnerabilidade `HIGH`/`CRITICAL` falha o pipeline
+- Erro de `fmt` ou `validate` IaC bloqueia merge
+- Staging desliga no cron noturno e religa sob demanda via `workflow_dispatch`
 - Sei explicar cada gate e seu custo se removido
+
+## Fora de escopo
+
+- Proibido: GitOps ArgoCD/Flux, deploy ECS Fargate, Ansible
+- Foco exclusivo: workflow YAML, build e testes Maven, build Docker, Trivy em `HIGH,CRITICAL`, `fmt` e `validate`
 
 ---
 
