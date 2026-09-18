@@ -18,8 +18,8 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 **INÍCIO:** nada declarado, nuvem local fora do ar.
 
-- [ ] Declarar provider `hashicorp/aws` `~> 5.0`, endpoints `ec2` e `s3` em `http://localhost:4566`, região `sa-east-1`, credenciais mock, com `skip_credentials_validation` e `skip_requesting_account_id`
-- [ ] Subir emulador local com `SERVICES=s3,ec2`, região `sa-east-1`, endpoint respondendo
+- [x] Declarar provider `hashicorp/aws` `~> 5.0`, endpoints `ec2` e `s3` em `http://localhost:4566`, região `sa-east-1`, credenciais mock, com `skip_credentials_validation` e `skip_requesting_account_id`
+- [x] Subir emulador local com `SERVICES=s3,ec2`, região `sa-east-1`, endpoint respondendo
 
 **FIM:** endpoint local responde; `init` e `validate` passam.
 
