@@ -87,6 +87,12 @@ When infra is created, set these to activate real implementations:
 
 Invoke `using-superpowers` at session start to load the skill framework. The user triggers `/ask-matt` when they need a skill router.
 
+## Agent Behavior
+
+- Doubt → teach: dúvida, não entendi, explica, como funciona, me ensina → tutor via `.agents/skills/teach-devops/SKILL.md` (READ-ONLY BLOCO → EXPLICAÇÃO in chat, never touches files; only `.md` via consolidate).
+- Write scope (outside teaching): implement only in `backend/` and `.tracker/` — other paths are read-only (read, plan, propose diff, wait for explicit request). While teaching, skill overrides scope: zero writes everywhere.
+- Grilling: when using `grilling` or `grill-me` skills, always use the `question` tool to ask questions — never output questions as plain text in the response.
+
 ## Conventions
 
 - All infra targets LocalStack (`localhost:4566`) in `sa-east-1` — no real AWS costs
