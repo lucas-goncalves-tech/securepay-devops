@@ -29,8 +29,8 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 **INÍCIO:** provider ok, rede única ou inexistente.
 
-- [ ] Criar VPC `10.0.0.0/16`
-- [ ] Criar pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (banco sem rota internet)
+- [x] Criar VPC `10.0.0.0/16`
+- [x] Criar pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (banco sem rota internet)
 
 **FIM:** três tiers endereçados e segregados.
 
