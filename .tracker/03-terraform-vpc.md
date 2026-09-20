@@ -41,7 +41,7 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 **INÍCIO:** rede existe, mas banco pode estar exposto.
 
 - [x] Criar SG da API com entrada `8080` e SG do banco com entrada `5432` exclusivamente via SG da API; nunca `0.0.0.0/0`
-- [ ] Criar bucket `securepay-financial-reports` com os 4 bloqueios (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
+- [x] Criar bucket `securepay-financial-reports` com os 4 bloqueios (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
 
 **FIM:** banco só via SG da API; bucket 100% privado.
 
@@ -61,8 +61,8 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 
 **INÍCIO:** subnets criadas, API sem entrada externa.
 
-- [ ] Adicionar endpoint `elbv2` no provider.tf
-- [ ] Declarar ALB (Application Load Balancer) na subnet pública
+- [x] Adicionar endpoint `elbv2` no provider.tf
+- [x] Declarar ALB (Application Load Balancer) na subnet pública
 - [ ] Criar Target Group apontando para API na subnet privada (porta 8080)
 - [ ] Declarar Listener na porta 80 com forward para Target Group
 - [ ] Configurar health check no Target Group (path: `/actuator/health`)
