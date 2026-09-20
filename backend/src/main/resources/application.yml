@@ -52,3 +52,9 @@ app:
 
 redis:
   enabled: ${REDIS_ENABLED:false}
+
+s3:
+  enabled: ${S3_ENABLED:false}
+  bucket-name: ${S3_BUCKET_NAME:securepay-financial-reports}
+  region: ${AWS_REGION:sa-east-1}
+  endpoint-url: ${S3_ENDPOINT_URL:}

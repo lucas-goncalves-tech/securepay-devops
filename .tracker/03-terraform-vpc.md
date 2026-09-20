@@ -6,11 +6,11 @@ trilha: trilha-1-core
 prioridade: alta
 ---
 
-# Issue #03: Infraestrutura como Código com Terraform e VPC Multi-Tier
+# Issue #03: Infraestrutura como Código com Terraform, VPC Multi-Tier e ALB
 
 ## Objetivo
 
-Declarar rede e storage de forma idempotente em ambiente local compatível com AWS, com banco isolado e sem vazamento de porta sensível.
+Declarar rede, storage e load balancer de forma idempotente em ambiente local compatível com AWS, com banco isolado e tráfego externo roteado via ALB.
 
 ## O que fazer
 
@@ -55,6 +55,22 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 **FIM:** plan final exit 0, sem pendências.
 
+---
+
+### Etapa 5 — Load Balancer
+
+**INÍCIO:** subnets criadas, API sem entrada externa.
+
+- [ ] Adicionar endpoint `elbv2` no provider.tf
+- [ ] Declarar ALB (Application Load Balancer) na subnet pública
+- [ ] Criar Target Group apontando para API na subnet privada (porta 8080)
+- [ ] Declarar Listener na porta 80 com forward para Target Group
+- [ ] Configurar health check no Target Group (path: `/actuator/health`)
+- [ ] Criar SG do ALB com entrada porta 80 (HTTP)
+- [ ] Ajustar SG da API para aceitar tráfego exclusivamente do SG do ALB
+
+**FIM:** ALB roteando tráfego para API via Target Group; health check passando.
+
 ## O que aprender
 
 ### Aprender A — Terraform base
@@ -79,6 +95,18 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 
 ---
 
+### Aprender D — Load Balancer
+
+- [ ] ALB vs NLB vs GLB, Target Groups e health checks
+  - https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
+  - https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html
+- [ ] Security Groups encadeados (ALB → API → DB)
+  - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
+
+**FIM:** sei justificar quando usar ALB vs NLB; health check configurado.
+
+---
+
 ### Aprender C — Emulador local
 
 - [ ] Integração com Terraform
@@ -91,11 +119,14 @@ Declarar rede e storage de forma idempotente em ambiente local compatível com A
 1. [ ] `plan -detailed-exitcode` exit 0
 2. [ ] `5432` jamais em `0.0.0.0/0`
 3. [ ] Bucket privado com 4 bloqueios; VPC e subnets exatas
+4. [ ] ALB acessível via DNS público
+5. [ ] Health check passando (target healthy)
+6. [ ] SG da API só aceita tráfego do SG do ALB
 
 ## Fora de escopo
 
 - Proibido: Kubernetes, Helm, CloudWatch Logs avançado, EKS, esteiras de CI/CD
-- Foco exclusivo: HCL, provider local em `localhost:4566`, VPC multi-tier, SGs sem vazamento em `5432`, bucket privado e drift via `plan`
+- Foco exclusivo: HCL, provider local em `localhost:4566`, VPC multi-tier, SGs sem vazamento em `5432`, bucket privado, drift via `plan`, ALB com target group e health check
 
 ---
 

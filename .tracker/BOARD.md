@@ -8,7 +8,7 @@ tags: [tracker, board]
 > Kanban profissional DevSecOps. Sem paths, sem comandos copy-paste.
 > Contexto consolidado em [[00-visao-geral|00 Visão Geral]] (pilares, E2E, metodologia).
 > 1 card por estágio. Foco: transformar o backend em plataforma profissional.
-> Ordem sugerida: 03 → 06 → 07 → 08 → 04 → 05 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
+> Ordem sugerida: 03 → 18 → 06 → 07 → 08 → 04 → 05 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17
 
 ## Done
 
@@ -23,7 +23,8 @@ tags: [tracker, board]
 
 ### Trilha 1 — Core (SecurePay)
 
-- [ ] [[03-terraform-vpc|03 Terraform VPC]] — rede multi-tier, SGs encadeados, storage privado
+- [ ] [[03-terraform-vpc|03 Terraform VPC]] — rede multi-tier, SGs encadeados, storage privado, ALB
+- [ ] [[18-s3-reports-infra|18 S3 Reports Infra]] — bucket, IAM user, endpoint para relatórios financeiros
 - [ ] [[04-github-actions|04 GitHub Actions]] — CI backend, scan Trivy, gate IaC, FinOps staging
 - [ ] [[05-observability|05 Observability]] — métricas Prometheus, Grafana p95/p99, carga k6
 
