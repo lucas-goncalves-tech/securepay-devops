@@ -40,7 +40,7 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 
 **INÍCIO:** rede existe, mas banco pode estar exposto.
 
-- [ ] Criar SG da API com entrada `8080` e SG do banco com entrada `5432` exclusivamente via SG da API; nunca `0.0.0.0/0`
+- [x] Criar SG da API com entrada `8080` e SG do banco com entrada `5432` exclusivamente via SG da API; nunca `0.0.0.0/0`
 - [ ] Criar bucket `securepay-financial-reports` com os 4 bloqueios (`block_public_acls`, `block_public_policy`, `ignore_public_acls`, `restrict_public_buckets`)
 
 **FIM:** banco só via SG da API; bucket 100% privado.
