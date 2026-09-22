@@ -18,6 +18,7 @@ provider "aws" {
   endpoints {
     s3 = "http://localhost:4566"
     ec2 = "http://localhost:4566"
-    elbv2 = "http://localhost:4566"
+    # ALB not available on free tier localstack
+    # elbv2 = "http://localhost:4566"
   }
 }

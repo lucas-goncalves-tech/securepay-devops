@@ -51,7 +51,7 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 
 **INÍCIO:** código pronto, estado não aplicado.
 
-- [ ] Executar `init` → `validate` → `apply -auto-approve` → `plan -detailed-exitcode` com exit 0
+- [x] Executar `init` → `validate` → `apply -auto-approve` → `plan -detailed-exitcode` com exit 0
 
 **FIM:** plan final exit 0, sem pendências.
 
@@ -63,11 +63,11 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 
 - [x] Adicionar endpoint `elbv2` no provider.tf
 - [x] Declarar ALB (Application Load Balancer) na subnet pública
-- [ ] Criar Target Group apontando para API na subnet privada (porta 8080)
-- [ ] Declarar Listener na porta 80 com forward para Target Group
-- [ ] Configurar health check no Target Group (path: `/actuator/health`)
-- [ ] Criar SG do ALB com entrada porta 80 (HTTP)
-- [ ] Ajustar SG da API para aceitar tráfego exclusivamente do SG do ALB
+- [x] Criar Target Group apontando para API na subnet privada (porta 8080)
+- [x] Declarar Listener na porta 80 com forward para Target Group
+- [x] Configurar health check no Target Group (path: `/actuator/health`)
+- [x] Criar SG do ALB com entrada porta 80 (HTTP)
+- [x] Ajustar SG da API para aceitar tráfego exclusivamente do SG do ALB
 
 **FIM:** ALB roteando tráfego para API via Target Group; health check passando.
 
@@ -116,12 +116,12 @@ Declarar rede, storage e load balancer de forma idempotente em ambiente local co
 
 ## Critério de pronto
 
-1. [ ] `plan -detailed-exitcode` exit 0
-2. [ ] `5432` jamais em `0.0.0.0/0`
-3. [ ] Bucket privado com 4 bloqueios; VPC e subnets exatas
-4. [ ] ALB acessível via DNS público
-5. [ ] Health check passando (target healthy)
-6. [ ] SG da API só aceita tráfego do SG do ALB
+1. [x] `plan -detailed-exitcode` exit 0
+2. [x] `5432` jamais em `0.0.0.0/0`
+3. [x] Bucket privado com 4 bloqueios; VPC e subnets exatas
+4. [x] ALB acessível via DNS público
+5. [x] Health check passando (target healthy)
+6. [x] SG da API só aceita tráfego do SG do ALB
 
 ## Fora de escopo
 
