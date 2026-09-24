@@ -12,7 +12,7 @@ tags: [tracker, overview]
 
 - **Jornada:** da JVM no Linux local à plataforma corporativa com Docker, Terraform, CI/CD e observabilidade em tempo real.
 - **Público:** desenvolvedor em transição para Junior DevOps / Cloud Platform Engineer e backend cloud-native.
-- **Objetivo final:** transformar o backend em plataforma profissional DevSecOps (Trilhas 1–3 + Ponte). FinOps/entrevistas e Ansible estão fora de escopo por decisão.
+- **Objetivo final:** transformar o backend em plataforma profissional DevSecOps (Trilha 1 — Core & DevSecOps, mais Trilhas 2–3). FinOps/entrevistas e Ansible estão fora de escopo por decisão.
 
 ## Metodologia (fim do tutorial purgatory)
 
@@ -39,7 +39,7 @@ Cada estágio é uma RFC / especificação de problema corporativo, sem receita 
 
 ## Ordem de execução e política de status
 
-- Ordem: `03 → 06 → 07 → 08 → 04 → 05 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17`.
+- Ordem: `03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18` (sequência numérica; uma faixa por trilha).
 - `01, 02` Done; restante To Do; `03` é o próximo Doing.
 - Cada card tem `## Fora de escopo` herdado dos contratos rígidos — respeitar para não antecipar ferramenta de estágio futuro.
 

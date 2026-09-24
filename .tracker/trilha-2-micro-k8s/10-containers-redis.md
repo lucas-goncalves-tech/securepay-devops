@@ -1,12 +1,12 @@
 ---
-aliases: [issue-09, containers-redis]
+aliases: [issue-10, containers-redis]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-2-micro-k8s
 prioridade: media
 ---
 
-# Issue #09: Multi-Service Containers, Redis Streams e Webhook Gateway
+# Issue #10: Multi-Service Containers, Redis Streams e Webhook Gateway
 
 ## Objetivo
 
@@ -63,6 +63,6 @@ Evoluir de monolito conteinerizado para composição multi-serviço com mensager
 
 ---
 
-**Prev:** [[05-observability]]
-**Next:** [[10-devsecops-gates]]
+**Prev:** [[09-observability]]
+**Next:** [[11-devsecops-gates]]
 **Board:** [[BOARD]]

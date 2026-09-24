@@ -1,12 +1,12 @@
 ---
-aliases: [issue-14, caddy-reverse-proxy]
+aliases: [issue-15, caddy-reverse-proxy]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-3-vps
 prioridade: alta
 ---
 
-# Issue #14: Gateway L7 com TLS Automático e Headers
+# Issue #15: Gateway L7 com TLS Automático e Headers
 
 ## Objetivo
 
@@ -62,6 +62,6 @@ Expor a API com HTTPS válido, roteamento por host e headers de segurança, sem 
 
 ---
 
-**Prev:** [[13-vps-hardening]]
-**Next:** [[15-compose-isolation]]
+**Prev:** [[14-vps-hardening]]
+**Next:** [[16-compose-isolation]]
 **Board:** [[BOARD]]

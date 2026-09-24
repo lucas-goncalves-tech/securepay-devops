@@ -1,12 +1,12 @@
 ---
-aliases: [issue-11, kubernetes-helm]
+aliases: [issue-12, kubernetes-helm]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-2-micro-k8s
 prioridade: media
 ---
 
-# Issue #11: Kubernetes Local Multi-Node com Helm Chart
+# Issue #12: Kubernetes Local Multi-Node com Helm Chart
 
 ## Objetivo
 
@@ -73,6 +73,6 @@ Portar a plataforma para orquestrador real com chart versionado, probes e limite
 
 ---
 
-**Prev:** [[10-devsecops-gates]]
-**Next:** [[12-aws-production]]
+**Prev:** [[11-devsecops-gates]]
+**Next:** [[13-aws-production]]
 **Board:** [[BOARD]]

@@ -2,7 +2,7 @@
 aliases: [issue-07, sast-semgrep]
 tags: [tracker, issue, todo, study-needed]
 status: todo
-trilha: ponte-devsecops
+trilha: trilha-1-core
 prioridade: alta
 ---
 

@@ -1,12 +1,12 @@
 ---
-aliases: [issue-10, devsecops-gates]
+aliases: [issue-11, devsecops-gates]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-2-micro-k8s
 prioridade: alta
 ---
 
-# Issue #10: Quality Gates DevSecOps no CI
+# Issue #11: Quality Gates DevSecOps no CI
 
 ## Objetivo
 
@@ -62,6 +62,6 @@ Aparafusar higiene de segredos, SAST e SCA na pipeline multi-serviço como gates
 
 ---
 
-**Prev:** [[09-containers-redis]]
-**Next:** [[11-kubernetes-helm]]
+**Prev:** [[10-containers-redis]]
+**Next:** [[12-kubernetes-helm]]
 **Board:** [[BOARD]]

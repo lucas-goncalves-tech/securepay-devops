@@ -1,12 +1,12 @@
 ---
-aliases: [issue-16, db-backups-s3]
+aliases: [issue-17, db-backups-s3]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-3-vps
 prioridade: alta
 ---
 
-# Issue #16: Backups Off-Site com Retenção e Restore Testado
+# Issue #17: Backups Off-Site com Retenção e Restore Testado
 
 ## Objetivo
 
@@ -64,6 +64,6 @@ Garantir que perda total da VPS não significa perda de dados, com restore prova
 
 ---
 
-**Prev:** [[15-compose-isolation]]
-**Next:** [[17-cicd-vps-deploy]]
+**Prev:** [[16-compose-isolation]]
+**Next:** [[18-cicd-vps-deploy]]
 **Board:** [[BOARD]]

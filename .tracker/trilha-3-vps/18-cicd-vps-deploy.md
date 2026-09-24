@@ -1,12 +1,12 @@
 ---
-aliases: [issue-17, cicd-vps-deploy]
+aliases: [issue-18, cicd-vps-deploy]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-3-vps
 prioridade: alta
 ---
 
-# Issue #17: CI/CD com Gates e Deploy Contínuo via SSH
+# Issue #18: CI/CD com Gates e Deploy Contínuo via SSH
 
 ## Objetivo
 
@@ -62,5 +62,6 @@ Fechar o ciclo DevSecOps: cada merge verde vira deploy auditável em produção 
 
 ---
 
-**Prev:** [[16-db-backups-s3]]
+**Prev:** [[17-db-backups-s3]]
+**Next:** [[BOARD]]
 **Board:** [[BOARD]]

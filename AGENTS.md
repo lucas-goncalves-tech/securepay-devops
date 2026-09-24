@@ -29,14 +29,12 @@ securepay-devops/
 │   ├── 03-terraform-vpc/
 │   ├── 04-github-actions/
 │   └── 05-observability/
-├── .tracker/                   # Obsidian-compatible issue tracker
+├── .tracker/                   # Obsidian-compatible issue tracker (uma pasta por trilha)
 │   ├── BOARD.md
-│   ├── 01-linux-runtime.md
-│   ├── 02-docker-compose.md
-│   ├── 03-terraform-vpc.md     # + ALB (Etapa 5)
-│   ├── 04-github-actions.md
-│   ├── 05-observability.md
-│   └── 18-s3-reports-infra.md  # S3 bucket + IAM for reports
+│   ├── 00-visao-geral.md       # contexto consolidado
+│   ├── trilha-1-core/          # 01–09 — Core & DevSecOps (app, infra, CI, gates, obs)
+│   ├── trilha-2-micro-k8s/     # 10–13 — microsserviços, K8s e nuvem
+│   └── trilha-3-vps/           # 14–18 — produção VPS econômica
 └── .agents/skills/             # Matt Pocock engineering skills
 ```
 
@@ -47,9 +45,12 @@ securepay-devops/
 | 01 | Linux runtime, env vars, healthcheck, POSIX signals | Done |
 | 02 | Multi-stage Dockerfile, Docker Compose, non-root user | Done |
 | 03 | Terraform HCL, VPC multi-tier, ALB, LocalStack | To Do |
-| 18 | S3 Reports Infra — bucket, IAM, endpoint | To Do |
-| 04 | GitHub Actions CI/CD, Trivy scanning, IaC gates | To Do |
-| 05 | Prometheus, Grafana dashboards, k6 load testing | To Do |
+| 04 | S3 Reports Infra — bucket, IAM, endpoint | To Do |
+| 05 | GitHub Actions CI/CD, Trivy scanning, IaC gates | To Do |
+| 06 | Secrets hygiene — Gitleaks gate in CI | To Do |
+| 07 | SAST Semgrep — blocking static analysis | To Do |
+| 08 | Pipeline hardening — least-privilege, SHA pin | To Do |
+| 09 | Prometheus, Grafana dashboards, k6 load testing | To Do |
 
 ## Backend Architecture
 

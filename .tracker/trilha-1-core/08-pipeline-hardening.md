@@ -2,7 +2,7 @@
 aliases: [issue-08, pipeline-hardening]
 tags: [tracker, issue, todo, study-needed]
 status: todo
-trilha: ponte-devsecops
+trilha: trilha-1-core
 prioridade: alta
 ---
 
@@ -63,5 +63,5 @@ Reduzir blast radius de supply-chain attack na esteira, com permissões mínimas
 ---
 
 **Prev:** [[07-sast-semgrep]]
-**Next:** [[04-github-actions]]
+**Next:** [[09-observability]]
 **Board:** [[BOARD]]

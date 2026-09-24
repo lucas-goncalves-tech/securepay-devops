@@ -1,12 +1,12 @@
 ---
-aliases: [issue-04, github-actions, stage-04]
+aliases: [issue-05, github-actions, stage-04]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-1-core
 prioridade: alta
 ---
 
-# Issue #04: Esteira CI/CD com Testes, Trivy e Gate IaC
+# Issue #05: Esteira CI/CD com Testes, Trivy e Gate IaC
 
 ## Objetivo
 
@@ -99,6 +99,6 @@ Automatizar build, teste, scan de vulnerabilidades e validação de infra a cada
 
 ---
 
-**Prev:** [[08-pipeline-hardening]]
-**Next:** [[05-observability]]
+**Prev:** [[04-s3-reports-infra]]
+**Next:** [[06-secrets-hygiene]]
 **Board:** [[BOARD]]

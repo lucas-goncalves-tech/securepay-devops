@@ -1,12 +1,12 @@
 ---
-aliases: [issue-13, vps-hardening]
+aliases: [issue-14, vps-hardening]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-3-vps
 prioridade: alta
 ---
 
-# Issue #13: Hardening de VPS para Produção Econômica
+# Issue #14: Hardening de VPS para Produção Econômica
 
 ## Objetivo
 
@@ -64,6 +64,6 @@ Deixar servidor barato apto a produção com acesso mínimo, firewall e proteç�
 
 ---
 
-**Prev:** [[12-aws-production]]
-**Next:** [[14-caddy-reverse-proxy]]
+**Prev:** [[13-aws-production]]
+**Next:** [[15-caddy-reverse-proxy]]
 **Board:** [[BOARD]]

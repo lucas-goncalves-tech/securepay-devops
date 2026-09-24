@@ -1,12 +1,12 @@
 ---
-aliases: [issue-15, compose-isolation]
+aliases: [issue-16, compose-isolation]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-3-vps
 prioridade: alta
 ---
 
-# Issue #15: Compose Isolado Anti-OOM com DB Blindado
+# Issue #16: Compose Isolado Anti-OOM com DB Blindado
 
 ## Objetivo
 
@@ -62,6 +62,6 @@ Rodar produção em compose com banco inacessível da internet, limites de memó
 
 ---
 
-**Prev:** [[14-caddy-reverse-proxy]]
-**Next:** [[16-db-backups-s3]]
+**Prev:** [[15-caddy-reverse-proxy]]
+**Next:** [[17-db-backups-s3]]
 **Board:** [[BOARD]]

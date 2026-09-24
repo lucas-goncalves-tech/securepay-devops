@@ -1,12 +1,12 @@
 ---
-aliases: [issue-12, aws-production]
+aliases: [issue-13, aws-production]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-2-micro-k8s
 prioridade: media
 ---
 
-# Issue #12: Nuvem Real com Estado Remoto e Lock
+# Issue #13: Nuvem Real com Estado Remoto e Lock
 
 ## Objetivo
 
@@ -64,6 +64,6 @@ Operar infra real com estado compartilhado e travas contra apply concorrente, ma
 
 ---
 
-**Prev:** [[11-kubernetes-helm]]
-**Next:** [[13-vps-hardening]]
+**Prev:** [[12-kubernetes-helm]]
+**Next:** [[14-vps-hardening]]
 **Board:** [[BOARD]]

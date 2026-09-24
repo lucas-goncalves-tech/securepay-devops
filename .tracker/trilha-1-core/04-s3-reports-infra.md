@@ -1,12 +1,12 @@
 ---
-aliases: [issue-18, s3-reports-infra]
+aliases: [issue-04, s3-reports-infra]
 tags: [tracker, issue, todo, ready-for-agent]
 status: todo
 trilha: trilha-1-core
 prioridade: alta
 ---
 
-# Issue #18: Infraestrutura S3 para Relatórios Financeiros
+# Issue #04: Infraestrutura S3 para Relatórios Financeiros
 
 ## Problem Statement
 
@@ -91,9 +91,9 @@ O app espera as seguintes variáveis (contrato):
 
 - **Código do app**: não modificar `ReportRepository`, `S3ReportRepository` ou qualquer Java code
 - **Geração de relatórios**: quem gera o conteúdo (PDF/CSV) é decidido pelo app, não pela infra
-- **Backups de banco**: são cobertos pelo issue #16
+- **Backups de banco**: são cobertos pelo issue #17
 - **ALB/Load Balancer**: coberto pelo issue #03 Etapa 5
-- **CI/CD para S3**: coberto pelo issue #04
+- **CI/CD para S3**: coberto pelo issue #05
 
 ## Further Notes
 
@@ -103,6 +103,6 @@ O app espera as seguintes variáveis (contrato):
 
 ---
 
-**Prev:** [[17-cicd-vps-deploy]]
-**Next:** [[BOARD]]
+**Prev:** [[03-terraform-vpc]]
+**Next:** [[05-github-actions]]
 **Board:** [[BOARD]]

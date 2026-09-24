@@ -2,7 +2,7 @@
 aliases: [issue-06, secrets-hygiene]
 tags: [tracker, issue, todo, study-needed]
 status: todo
-trilha: ponte-devsecops
+trilha: trilha-1-core
 prioridade: alta
 ---
 
@@ -53,6 +53,6 @@ Impedir que credenciais e arquivos de ambiente vazem para o git, com detecção 
 
 ---
 
-**Prev:** [[03-terraform-vpc]]
+**Prev:** [[05-github-actions]]
 **Next:** [[07-sast-semgrep]]
 **Board:** [[BOARD]]

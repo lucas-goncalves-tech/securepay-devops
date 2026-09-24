@@ -1,12 +1,12 @@
 ---
-aliases: [issue-05, observability, stage-05]
+aliases: [issue-09, observability, stage-05]
 tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-1-core
 prioridade: alta
 ---
 
-# Issue #05: Observabilidade, Golden Signals e Teste de Carga
+# Issue #09: Observabilidade, Golden Signals e Teste de Carga
 
 ## Objetivo
 
@@ -86,6 +86,6 @@ Provar em produção local que a API sustenta concorrência real sem starvation 
 
 ---
 
-**Prev:** [[04-github-actions]]
-**Next:** [[09-containers-redis]]
+**Prev:** [[08-pipeline-hardening]]
+**Next:** [[10-containers-redis]]
 **Board:** [[BOARD]]
