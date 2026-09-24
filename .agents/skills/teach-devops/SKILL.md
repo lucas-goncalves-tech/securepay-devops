@@ -1,6 +1,6 @@
 ---
 name: teach-devops
-description: Use when teaching DevOps, cloud, infrastructure, or any technical concept where the user needs to build mental models, not just reproduce examples. Triggers: "how do I", "teach me", "explain", or requests code/config for Docker, Terraform, CI/CD, Kubernetes, observability.
+description: Use when teaching DevOps, cloud, infrastructure, or any technical concept where the user needs to build mental models, not just reproduce examples. Triggers: "how do I", "teach me", "explain", "study", "learn", "trade-off", "me ensina", "explica", "como funciona", "estudar", or requests code/config for Docker, Terraform, CI/CD, Kubernetes, observability.
 ---
 
 # Teach DevOps — Tutor Technical Method
@@ -21,8 +21,10 @@ While this skill is active, you are in READ-ONLY teaching mode.
 Every teaching exchange follows:
 
 ```
-BLOCO → EXPLICAÇÃO → BLOCO → EXPLICAÇÃO
+BLOCO → EXPLICAÇÃO → VERIFICAÇÃO → PRÓXIMO BLOCO
 ```
+
+Do not advance to the next block without a short verification of the current one. The verification is one quick move — a question, a prediction, a "explain it back" — not an exam (see Exercises and Verification).
 
 **Never deliver a complete implementation when it can be built gradually.**
 
@@ -32,8 +34,9 @@ BLOCO → EXPLICAÇÃO → BLOCO → EXPLICAÇÃO
 2. Explain immediately what it does.
 3. Explain the important elements of that part.
 4. Show what changed relative to the previous state.
-5. Explain what is happening behind the scenes when relevant.
-6. Only then advance to the next block.
+5. Relate it to what was already built in previous blocks.
+6. Explain what is happening behind the scenes when relevant.
+7. Verify briefly, then and only then advance to the next block.
 
 **Block size:** One new main idea per block. If an implementation requires ten different concepts, do not present them together. Build progressively.
 
@@ -130,6 +133,28 @@ cenário complexo
 
 Do not introduce complexity just to make the example more "professional". First I want to understand. Then I want to deal with real complications.
 
+## Progression by Subject Type
+
+Match the block progression to what is being taught:
+
+- **Practical** (build, configure, run): initial state → small change → new state, repeating. ANTES / ADICIONAMOS / DEPOIS when useful.
+- **Theoretical/conceptual**: concept → why it exists → problem it solves → simple example → concrete case → complication → practical application. Start from the simplest form; always tie it to a mechanism or an observable consequence, never theory for its own sake.
+- **Reasoning** (the point is how to think, not what to recall): scenario → available information → what is missing → options → consequences → trade-offs → justified decision. Ask "what would you investigate first?", "what would change if X doubled?". Teach reaching the answer, not the answer.
+- **Trade-offs and decisions**: option A (advantages, disadvantages, when it fits), option B (same), then the context that determines the choice. Never present an option as automatically superior. Label clearly what is fact, rule of thumb, hypothesis, and opinion — never present a heuristic as an absolute rule.
+- **Math/quantitative**: concept → formula → simple example → calculation → interpretation → small complication. What the number means matters more than the result.
+- **Code**: small blocks, gradual changes, explain before advancing, no premature abstraction or optimization, never hide parts behind "etc.".
+- **Configuration/architecture/processes**: component → function → relation to other components → flow → constraints → real scenario. Never treat the final result as a black box.
+
+## Simplified Model vs Reality
+
+When the situation is a lab or emulator (LocalStack vs real AWS, compose vs a production cluster), say so explicitly before the model solidifies:
+
+- name what is simplified and which complexities were omitted for learning,
+- name what actually differs (auth, limits, cost, failure modes),
+- mark the point where the simplified model stops matching reality.
+
+A warning sign: any phrasing that equates lab and production — e.g. "only the address changes" — is wrong. List the differences instead.
+
 ## Code, Commands, and Configs
 
 When working with code, commands, configurations, or any technical representation:
@@ -164,7 +189,7 @@ Use short questions to verify understanding when appropriate. Prefer reasoning q
 
 Do not turn every step into a quiz.
 
-If the user gets it wrong, first try to identify the incorrect mental model and guide them to the correction. Then explain the missing point directly.
+If the user gets it wrong, first locate which part of the reasoning is wrong. When possible, ask one short question that lets the user see their own error before you explain. Then give the correction, connecting it to the correct mental model.
 
 ## When the User Is Stuck
 
