@@ -1,6 +1,6 @@
 ---
 aliases: [issue-04, s3-reports-infra]
-tags: [tracker, issue, todo, ready-for-agent]
+tags: [tracker, issue, todo, study-needed]
 status: todo
 trilha: trilha-1-core
 prioridade: alta
@@ -8,98 +8,107 @@ prioridade: alta
 
 # Issue #04: Infraestrutura S3 para Relatórios Financeiros
 
-## Problem Statement
+## Objetivo
 
-O app (ledger-service) gera relatórios financeiros (PDF/CSV) e precisa salvá-los em storage persistente. A infra atual (#03) cria o bucket `securepay-financial-reports` no LocalStack, mas não expõe:
-- IAM user com credenciais para o app acessar o S3
-- Endpoint S3 acessível da rede do app (subnet privada)
-- Contrato do que o app espera da infra (ReportRepository)
+Dar ao app storage persistente para relatórios financeiros (PDF/CSV): IAM com least privilege, endpoint S3 alcançável da subnet privada e contrato de variáveis de ambiente — tornando o `S3ReportRepository` funcional sem modificar código do app.
 
-O app **já possui** (ou terá) `ReportRepository` com duas implementações:
-- `NoOpReportRepository` — default, sem storage real
-- `S3ReportRepository` — usa AWS SDK para S3
+## O que fazer
 
-O objetivo desta issue é **criar a infraestrutura** que torna o `S3ReportRepository` funcional, sem modificar código do app.
+### Etapa 1 — IAM com least privilege
 
-## Solution
+**INÍCIO:** o bucket existe (#03), mas ninguém tem credencial para usá-lo.
 
-Criar os recursos Terraform necessários para o app acessar S3:
-1. IAM user com política de acesso ao bucket
-2. Credenciais expostas via variáveis de ambiente
-3. Endpoint S3 acessível da subnet privada (onde roda o app)
-4. Security Group allowendo tráfego S3 da subnet privada
+- [ ] Criar IAM user `securepay-reports-user`
+- [ ] Declarar política `Effect: Allow` apenas para `s3:PutObject`, `s3:GetObject` e `s3:DeleteObject` no bucket `securepay-financial-reports` — nunca `*`
+- [ ] Expôr credenciais somente via variáveis de ambiente, nunca em código
 
-## User Stories
+**FIM:** credenciais do user funcionam dentro do bucket e são negadas fora dele.
 
-1. As a platform engineer, I want an IAM user with scoped S3 permissions, so that the app can read/write reports without broad AWS access
-2. As a platform engineer, I want the IAM credentials available as environment variables, so that the app can authenticate to S3 without hardcoding secrets
-3. As a platform engineer, I want the S3 endpoint reachable from the private subnet, so that the app can access S3 without public internet exposure
-4. As a backend developer, I want to know the bucket name and region via environment variables, so that I can configure the S3 client without hardcoded values
-5. As a platform engineer, I want the bucket to block all public access, so that financial reports are never exposed publicly
-6. As a platform engineer, I want to test S3 integration locally via LocalStack, so that I can validate the infra before deploying to real AWS
-7. As a backend developer, I want a clear contract (environment variables, endpoint), so that I can implement S3ReportRepository without guessing infra details
-8. As a platform engineer, I want the IAM policy to allow only the specific bucket, so that the app cannot access other S3 resources
-9. As a platform engineer, I want server-side encryption enabled on the bucket, so that reports are encrypted at rest
-10. As a platform engineer, I want bucket versioning enabled, so that accidental overwrites can be recovered
+---
 
-## Implementation Decisions
+### Etapa 2 — Acesso a partir da rede privada
 
-### Resources Terraform
+**INÍCIO:** endpoint S3 declarado no provider (#03), mas alcance da subnet privada não verificado.
 
-- **IAM User**: `securepay-reports-user` com política S3 scoped ao bucket `securepay-financial-reports`
-- **IAM Policy**: `s3:PutObject`, `s3:GetObject`, `s3:DeleteObject` no bucket específico
-- **Bucket**: reusar `securepay-financial-reports` já declarado no #03
-- **Bucket Config**: `block_public_acls=true`, `block_public_policy=true`, `ignore_public_acls=true`, `restrict_public_buckets=true`, versioning enabled, server-side encryption (AES256)
-- **Endpoint**: S3 endpoint já existe no provider (#03). Verificar se é acessível da subnet privada via route table
+- [ ] Verificar se o endpoint S3 é alcançável da subnet privada via route table
+- [ ] Criar SG permitindo tráfego S3 vindo da subnet privada onde roda o app
 
-### Variáveis de Ambiente para o App
+**FIM:** app na subnet privada alcança o S3 sem nenhuma exposição pública.
 
-O app espera as seguintes variáveis (contrato):
+---
 
-| Variável | Descrição | Exemplo |
-|----------|-----------|---------|
-| `AWS_ACCESS_KEY_ID` | IAM user access key | `AKIA...` |
-| `AWS_SECRET_ACCESS_KEY` | IAM user secret key | `wJal...` |
-| `AWS_REGION` | Região S3 | `sa-east-1` |
-| `S3_BUCKET_NAME` | Nome do bucket | `securepay-financial-reports` |
-| `S3_ENDPOINT_URL` | Endpoint (LocalStack only) | `http://localhost:4566` |
+### Etapa 3 — Bucket e contrato com o app
 
-### Segurança
+**INÍCIO:** bucket básico criado no #03, sem proteções de conteúdo nem contrato publicado.
 
-- IAM policy com `Effect: Allow` apenas no bucket específico (não `*`)
-- Bucket com 4 bloqueios de acesso público (já existente no #03)
-- Server-side encryption habilitado
-- Credenciais via variáveis de ambiente, nunca em código
+- [ ] Reusar o bucket `securepay-financial-reports` (movê-lo para `infra/s3.tf` se a organização exigir)
+- [ ] Habilitar versioning e server-side encryption (AES256)
+- [ ] Publicar o contrato de variáveis que o app espera:
+  - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` — credenciais do IAM user
+  - `AWS_REGION` — `sa-east-1`
+  - `S3_BUCKET_NAME` — `securepay-financial-reports`
+  - `S3_ENDPOINT_URL` — `http://localhost:4566` (somente LocalStack; AWS real usa o endpoint regional)
 
-### LocalStack vs AWS
+**FIM:** app configurável 100% por env vars, sem hardcode; bucket versionado e criptografado.
 
-| Aspecto | LocalStack | AWS Real |
-|---------|------------|----------|
-| Endpoint | `http://localhost:4566` | `https://s3.sa-east-1.amazonaws.com` |
-| IAM | Credenciais mock (`test/test`) | IAM user real |
-| Custo | $0 | ~$0.023/GB armazenamento |
+---
 
-## Testing Decisions
+### Etapa 4 — Validação determinística
 
-- **Terraform validate**: `terraform init && terraform validate` deve passar
-- **Terraform plan**: `terraform plan -detailed-exitcode` deve retornar exit 0 (sem drift)
-- **LocalStack**: bucket acessível via `awslocal s3 ls`
-- **IAM**: credenciais funcionam para put/get/delete no bucket
-- **Segurança**: bucket não aceita acesso público (testar com `awslocal s3api get-bucket-acl`)
+**INÍCIO:** recursos declarados, nada validado.
 
-## Out of Scope
+- [ ] `terraform init && terraform validate` passam
+- [ ] `terraform plan -detailed-exitcode` retorna exit 0 (sem drift)
+- [ ] `awslocal s3 ls` acessa o bucket
+- [ ] Put/get/delete com as credenciais do IAM user funcionam
+- [ ] `awslocal s3api get-bucket-acl` confirma zero acesso público
 
-- **Código do app**: não modificar `ReportRepository`, `S3ReportRepository` ou qualquer Java code
-- **Geração de relatórios**: quem gera o conteúdo (PDF/CSV) é decidido pelo app, não pela infra
-- **Backups de banco**: são cobertos pelo issue #17
-- **ALB/Load Balancer**: coberto pelo issue #03 Etapa 5
-- **CI/CD para S3**: coberto pelo issue #05
+**FIM:** tudo validado por comando determinístico, nada manual.
 
-## Further Notes
+## O que aprender
 
-- O bucket `securepay-financial-reports` já está declarado no `infra/vpc.tf` (ou deve ser movido para `infra/s3.tf` para organização)
-- A política IAM deve ser o mais restritiva possível (least privilege)
-- Em produção (AWS real), o app pode usar IAM Roles se rodar em EC2/ECS, mas para LocalStack precisamos de access keys
+### Aprender A — IAM e least privilege
+
+- [ ] Users, policies e escopo mínimo
+  - https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users.html
+  - https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html
+- [ ] Policy escopada num bucket vs `*`
+  - https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html
+
+**FIM:** sei justificar por que a política atinge só o bucket; sei dizer quando AWS real usa IAM Role em vez de access key.
+
+---
+
+### Aprender B — S3: versão e criptografia
+
+- [ ] Versioning
+  - https://docs.aws.amazon.com/AmazonS3/latest/userguide/versioning.html
+- [ ] Server-side encryption
+  - https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html
+
+**FIM:** sei explicar o que o versioning recupera e o que a SSE protege.
+
+---
+
+### Aprender C — Emulador local
+
+- [ ] S3 e IAM emulados, endpoint local vs real
+  - https://docs.localstack.cloud/user-guide/aws/s3/
+  - https://docs.localstack.cloud/user-guide/aws/iam/
+
+**FIM:** sei apontar endpoint local vs AWS real e o custo de cada um ($0 vs $/GB).
+
+## Critério de pronto
+
+1. [ ] `validate` passa e `plan -detailed-exitcode` exit 0
+2. [ ] Put/get/delete funcionam só no bucket alvo; fora dele, negado
+3. [ ] Bucket alcançável da subnet privada e sem acesso público (`get-bucket-acl`)
+4. [ ] Contrato das 5 variáveis de ambiente publicado; versioning + SSE ativos
+
+## Fora de escopo
+
+- Proibido: modificar `ReportRepository`, `S3ReportRepository` ou qualquer código Java; gerar conteúdo de relatório; CI/CD (issue #05); ALB (issue #03 Etapa 5); backup de banco (issue #17)
+- Foco exclusivo: IAM user + política scoped, SG/endpoint da subnet privada, contrato de env vars, versioning/SSE, validação via `awslocal`
 
 ---
 
