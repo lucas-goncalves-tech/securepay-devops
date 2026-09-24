@@ -23,12 +23,6 @@ securepay-devops/
 ├── infra/                      # Terraform IaC
 │   ├── provider.tf             # AWS provider + LocalStack endpoints
 │   └── vpc.tf                  # VPC multi-tier + subnets
-├── stage/                      # DevOps learning stages
-│   ├── 01-linux-runtime/
-│   ├── 02-docker-compose/
-│   ├── 03-terraform-vpc/
-│   ├── 04-github-actions/
-│   └── 05-observability/
 ├── .tracker/                   # Obsidian-compatible issue tracker (uma pasta por trilha)
 │   ├── BOARD.md
 │   ├── 00-visao-geral.md       # contexto consolidado
