@@ -46,39 +46,39 @@ resource "aws_security_group" "db" {
 # --- API
 
 resource "aws_vpc_security_group_ingress_rule" "api_http_in" {
-  description = "INTERNET -> API:80"
+  description       = "INTERNET -> API:80"
   security_group_id = aws_security_group.api.id
   ip_protocol       = "tcp"
-  cidr_ipv4 = "0.0.0.0/0"
-  from_port = 80
-  to_port = 80
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  to_port           = 80
 }
 
 resource "aws_vpc_security_group_ingress_rule" "api_https_in" {
-  description = "INTERNET -> API:433"
+  description       = "INTERNET -> API:433"
   security_group_id = aws_security_group.api.id
   ip_protocol       = "tcp"
-  cidr_ipv4 = "0.0.0.0/0"
-  from_port = 443
-  to_port = 443
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  to_port           = 443
 }
 
 resource "aws_vpc_security_group_egress_rule" "api_to_db" {
-  description = "API -> DB:5432"
-  security_group_id = aws_security_group.api.id
+  description                  = "API -> DB:5432"
+  security_group_id            = aws_security_group.api.id
   referenced_security_group_id = aws_security_group.db.id
-  ip_protocol       = "tcp"
-  from_port = 5432
-  to_port = 5432
+  ip_protocol                  = "tcp"
+  from_port                    = 5432
+  to_port                      = 5432
 }
 
 # --- DB
 
 resource "aws_vpc_security_group_ingress_rule" "db_from_api" {
-  description = "DB:5432 <- API"
-  security_group_id = aws_security_group.db.id
+  description                  = "DB:5432 <- API"
+  security_group_id            = aws_security_group.db.id
   referenced_security_group_id = aws_security_group.api.id
-  ip_protocol       = "tcp"
-  from_port = 5432
-  to_port = 5432
+  ip_protocol                  = "tcp"
+  from_port                    = 5432
+  to_port                      = 5432
 }
