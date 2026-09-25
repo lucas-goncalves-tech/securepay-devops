@@ -14,17 +14,18 @@ tags: [tracker, board]
 
 - [x] [[01-linux-runtime|01 Linux Runtime]] — runtime, env, healthcheck L4/L7, SIGTERM
 - [x] [[02-docker-compose|02 Docker Compose]] — imagem enxuta non-root, compose com dependência saudável
+- [x] [[03-terraform-vpc|03 Terraform VPC]] — rede multi-tier, SGs encadeados, storage privado, IGW e roteamento
+      _adiado para quando houver `elbv2`: reativação do ALB, entrada da API pelo SG do ALB, e o Aprender D (ALB vs NLB)_
 
 ## Doing
 
-- [ ] _vazio — puxe `03-terraform-vpc` para cá ao iniciar_
+- [ ] [[04-s3-reports-infra|04 S3 Reports Infra]] — IAM Role + policy scoped, endpoint de rede, versioning/SSE/lifecycle, contrato de env vars
+      _ordem dentro da issue: Etapa 1 → 3 → 4 → 2 (ver `## Ordem de execução` no card)_
 
 ## To Do
 
 ### Trilha 1 — Core & DevSecOps (01–09)
 
-- [ ] [[03-terraform-vpc|03 Terraform VPC]] — rede multi-tier, SGs encadeados, storage privado, ALB
-- [ ] [[04-s3-reports-infra|04 S3 Reports Infra]] — bucket, IAM user, endpoint para relatórios financeiros
 - [ ] [[05-github-actions|05 GitHub Actions]] — CI backend, scan Trivy, gate IaC, FinOps staging
 - [ ] [[06-secrets-hygiene|06 Secrets Hygiene]] — higiene de segredos e baseline anti-vazamento
 - [ ] [[07-sast-semgrep|07 SAST Semgrep]] — análise estática com regras bloqueantes

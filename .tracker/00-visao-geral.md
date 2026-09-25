@@ -40,7 +40,7 @@ Cada estágio é uma RFC / especificação de problema corporativo, sem receita 
 ## Ordem de execução e política de status
 
 - Ordem: `03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13 → 14 → 15 → 16 → 17 → 18` (sequência numérica; uma faixa por trilha).
-- `01, 02` Done; restante To Do; `03` é o próximo Doing.
+- `01, 02, 03` Done; `04` é o próximo Doing.
 - Cada card tem `## Fora de escopo` herdado dos contratos rígidos — respeitar para não antecipar ferramenta de estágio futuro.
 
 ---

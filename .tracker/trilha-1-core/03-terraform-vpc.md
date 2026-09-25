@@ -1,7 +1,7 @@
 ---
 aliases: [issue-03, terraform-vpc, stage-03]
-tags: [tracker, issue, todo, study-needed]
-status: todo
+tags: [tracker, issue, done, study-needed]
+status: done
 trilha: trilha-1-core
 prioridade: alta
 ---
@@ -25,7 +25,7 @@ Declarar rede, roteamento, storage e load balancer de forma idempotente em ambie
 | Arquivo | Conteúdo atual | Observação |
 |---|---|---|
 | `infra/provider.tf` | Provider AWS + LocalStack, endpoints `s3`/`ec2` | Endpoint `elbv2` está comentado |
-| `infra/vpc.tf` | VPC e três subnets | ALB comentado; `aws_internet_gateway` e route tables ainda não declarados |
+| `infra/vpc.tf` | VPC, três subnets, IGW e route tables | ALB comentado; `aws_internet_gateway` e route tables **já implementados** |
 | `infra/security.tf` | SG da API e SG do banco | SG do ALB comentado; API exposta temporariamente para o laboratório |
 | `infra/s3.tf` | Bucket e quatro bloqueios de acesso público | Adequado ao escopo desta issue |
 
@@ -48,7 +48,7 @@ Declarar rede, roteamento, storage e load balancer de forma idempotente em ambie
 
 - [x] Criar VPC `10.0.0.0/16`
 - [x] Criar subnet pública `10.0.1.0/24` (load balancers), privada `10.0.2.0/24` (API) e isolada `10.0.3.0/24` (destinada ao banco)
-- [ ] Confirmar o comportamento de rota isolado da subnet do banco na Etapa 2B
+- [x] Confirmar o comportamento de rota isolado da subnet do banco na Etapa 2B
 
 **FIM:** três tiers endereçados e segregados por CIDR; isolamento por rota fica explícito na Etapa 2B.
 
@@ -125,7 +125,7 @@ subnet banco   → sem rota internet direta
 
 ### Aprender A — Terraform base
 
-- [ ] HCL, estado e drift
+- [x] HCL, estado e drift
   - https://developer.hashicorp.com/terraform/docs
   - https://developer.hashicorp.com/terraform/cli/commands/plan
 
@@ -135,12 +135,12 @@ subnet banco   → sem rota internet direta
 
 ### Aprender B — Rede e storage AWS
 
-- [ ] VPC, subnets, route tables, SGs
+- [x] VPC, subnets, route tables, SGs
   - https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html
   - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
   - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-route-tables.html
-- [ ] Internet Gateway e diferença entre subnet pública e privada
-- [ ] S3 e bloqueio público
+- [x] Internet Gateway e diferença entre subnet pública e privada
+- [x] S3 e bloqueio público
   - https://docs.aws.amazon.com/s3/
 
 **FIM:** sei justificar 3 tiers, rota de cada subnet e SG encadeado.
@@ -152,7 +152,7 @@ subnet banco   → sem rota internet direta
 - [ ] ALB vs NLB vs GLB, Target Groups e health checks
   - https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html
   - https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html
-- [ ] Security Groups encadeados (ALB → API → DB)
+- [x] Security Groups encadeados (ALB → API → DB)
   - https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html
 
 **FIM:** sei justificar quando usar ALB vs NLB; health check configurado.
@@ -161,9 +161,9 @@ subnet banco   → sem rota internet direta
 
 ### Aprender C — Emulador local
 
-- [ ] Integração com Terraform
+- [x] Integração com Terraform
   - https://docs.localstack.cloud/user-guide/integrations/terraform/
-- [ ] O que o LocalStack free cobre e o que ele simplifica em relação à AWS real
+- [x] O que o LocalStack free cobre e o que ele simplifica em relação à AWS real
 
 **FIM:** sei apontar endpoint e serviços emulados, e separar validação local de prontidão para produção.
 
@@ -175,15 +175,25 @@ subnet banco   → sem rota internet direta
 2. [x] `5432` jamais em `0.0.0.0/0`
 3. [x] Bucket privado com 4 bloqueios; VPC e subnets exatas
 4. [x] ALB implementado no código e desativado/documentado no LocalStack free
-5. [ ] Limitação de roteamento local documentada ou route tables implementadas
+5. [x] Limitação de roteamento local documentada ou route tables implementadas
 
 ### Arquitetura final
 
-1. [ ] Subnet pública associada a route table com rota para Internet Gateway
-2. [ ] Subnets da API e do banco sem rota internet direta
+1. [x] Subnet pública associada a route table com rota para Internet Gateway
+2. [x] Subnets da API e do banco sem rota internet direta
 3. [ ] SG da API aceita `8080` somente do SG do ALB quando o ALB estiver ativo
 4. [ ] ALB acessível via DNS público em ambiente com `elbv2`
 5. [ ] Health check do Target Group passando (`target healthy`)
+
+## Carry-over
+
+**Status:** Done para o laboratório LocalStack (critérios de laboratório 100% concluídos). Os itens abaixo ficaram em aberto e são **condicionados a um ambiente com `elbv2`** — nenhum deles bloqueia a execução da issue #04:
+
+- [ ] Reativar `aws_alb`, `aws_alb_target_group` e `aws_alb_listener` (hoje comentados em `vpc.tf`), e validar DNS, listener e health check
+- [ ] Restringir a entrada da API na porta `8080` ao SG do ALB — enquanto isso, a regra temporária de `0.0.0.0/0` em `80`/`443` permanece documentada como lab-only
+- [ ] **Aprender D** — ALB vs NLB vs GLB
+
+Nota sobre o `elbv2`: `infra/platform/compose-localstack.yaml` já lista `elbv2` em `SERVICES` e exige `LOCALSTACK_AUTH_TOKEN`. Se o ambiente agora é Pro, a premissa "free tier não tem elbv2" do texto original está defasada e vale reavaliar a reativação.
 
 ## Fora de escopo
 
